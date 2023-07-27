@@ -1,0 +1,4 @@
+name: LocksRP
+version: '${project.version}'
+main: me.sieg.locksrp.Main
+api-version: '1.19'
