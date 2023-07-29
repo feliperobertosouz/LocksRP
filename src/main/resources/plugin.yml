@@ -1,4 +1,7 @@
 name: LocksRP
 version: '${project.version}'
 main: me.sieg.locksrp.Main
+author: Sieg dev
 api-version: '1.19'
+commands:
+  locksRP:

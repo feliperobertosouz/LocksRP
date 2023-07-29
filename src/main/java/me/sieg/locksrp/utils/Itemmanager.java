@@ -1,2 +1,125 @@
-package me.sieg.locksrp.utils;public class Itemmanager {
+package me.sieg.locksrp.utils;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Itemmanager {
+
+    protected int customModelDataKey = 9999;
+
+    protected int customModelDataLockPick = 9940;
+
+    protected int customModelDataLockRemover = 9940;
+
+
+    public ItemStack getChaveItem(int amount){
+        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
+        ItemMeta meta = chave.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "Chave");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
+        meta.setCustomModelData(this.customModelDataKey);
+        chave.setItemMeta(meta);
+        return chave;
+    }
+
+    public ItemStack getLock(int level,int customModel, int amount){
+
+        ItemStack tranca = new ItemStack((Material.FLINT), amount);
+        ItemMeta meta = tranca.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GOLD + "Lock");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
+
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + level));
+
+        meta.setCustomModelData(customModel);
+        tranca.setItemMeta(meta);
+
+        return tranca;
+    }
+
+    public ItemStack generateKey(String code){
+        ItemStack chave = getChaveItem(1);
+
+        ItemMeta meta = chave.getItemMeta();
+
+        NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Chave: " + ChatColor.DARK_PURPLE + code));
+        chave.setItemMeta(meta);
+        return chave;
+
+    }
+    public ItemStack generateLock(int level, String code){
+        int customModel = 9999;
+        if(level == 1){
+            customModel = 9999;
+        }else if(level == 2){
+            customModel = 9998;
+        }else if(level == 3){
+            customModel = 9997;
+        }else if(level == 4){
+            customModel = 9996;
+        }else if(level == 5){
+            customModel = 9995;
+        }
+
+        ItemStack tranca = new ItemStack((Material.FLINT));
+        ItemMeta meta = tranca.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GOLD + "lock");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"keyCode", code);
+
+        List<String> newlore = new ArrayList<>();
+        newlore.add(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + level);
+        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + code);
+        meta.setLore(newlore);
+        meta.setCustomModelData(customModel);
+
+        tranca.setItemMeta(meta);
+        return tranca;
+    }
+
+    public ItemStack getLockPick(){
+        ItemStack lockpick = new ItemStack((Material.STICK));
+
+        ItemMeta meta = lockpick.getItemMeta();
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLockPick", "true");
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "LockPick"));
+        meta.setDisplayName(ChatColor.GOLD + "LockPick");
+
+        meta.setCustomModelData(customModelDataLockPick);
+
+        lockpick.setItemMeta(meta);
+        return lockpick;
+    }
+
+    public ItemStack getLockRemover(){
+
+        ItemStack lockRemover = new ItemStack(Material.IRON_HORSE_ARMOR);
+        ItemMeta meta = lockRemover.getItemMeta();
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isLockRemover", "true");
+        meta.setDisplayName(ChatColor.GRAY + "LOCK REMOVER");
+        List<String> newlore = new ArrayList<>();
+        newlore.add(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + "REMOVEDOR DE TRANCAS");
+        meta.setCustomModelData(this.customModelDataLockRemover);
+        meta.setLore(newlore);
+        lockRemover.setItemMeta(meta);
+
+        return lockRemover;
+    }
 }
