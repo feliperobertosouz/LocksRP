@@ -45,14 +45,7 @@ public class InventoryChecker {
     }
 
 
-    private static boolean hasLockPickTag(ItemStack item) {
-        NamespacedKey lockPickKey = new NamespacedKey(Main.getPlugin(), "isLockPick");
-        if (item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(lockPickKey, PersistentDataType.STRING)) {
-            String isLockPick = item.getItemMeta().getPersistentDataContainer().get(lockPickKey, PersistentDataType.STRING);
-            return isLockPick != null && isLockPick.equals("true");
-        }
-        return false;
-    }
+
     public static void removeLockPick(Player player) {
         PlayerInventory inventory = player.getInventory();
         ItemStack[] contents = inventory.getContents();
@@ -60,7 +53,7 @@ public class InventoryChecker {
         for (int i = 0; i < contents.length; i++) {
             ItemStack item = contents[i];
             if (item != null && item.getType() == Material.STICK) {
-                if (hasLockPickTag(item)) {
+                if (NameSpacedKeys.isLockPick(item.getItemMeta())) {
                     int amount = item.getAmount();
                     if (amount > 1) {
                         item.setAmount(amount - 1);

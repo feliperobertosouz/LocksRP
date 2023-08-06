@@ -34,10 +34,8 @@ public class InventoryClick implements Listener {
                 if (keyCode != null) {
                     if (clickedItem != null && clickedItem.hasItemMeta()) {
                         ItemMeta clickedMeta = clickedItem.getItemMeta();
-                        String isKeyClicked = NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "isKey");
 
-                        if (clickedItem.getType().equals(Material.NAME_TAG) &&
-                                isKeyClicked != null && NameSpacedKeys.isKey(clickedMeta)
+                        if (clickedItem.getType().equals(Material.NAME_TAG) && NameSpacedKeys.isKey(clickedMeta)
                                 && event.getClickedInventory().getType() == InventoryType.PLAYER) {
 
                             if (NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "keyCode") == null) {
@@ -60,7 +58,6 @@ public class InventoryClick implements Listener {
                                 player.sendMessage(ChatColor.GOLD + "Você forja uma nova chave");
                             }
                         } else {
-                            String isLockClicked = NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "isLock");
                             if (clickedItem.getType().equals(Material.FLINT) && NameSpacedKeys.isLock(clickedItem.getItemMeta())
                                     && event.getClickedInventory().getType() == InventoryType.PLAYER) {
 

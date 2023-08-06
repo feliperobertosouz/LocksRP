@@ -23,9 +23,7 @@ public class LocksRPCommands implements CommandExecutor {
                 return false;
             }
             if(args.length == 0){
-                sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]" + ChatColor.WHITE + "HELP");
-                sender.sendMessage(ChatColor.GOLD + "/locksRP getkey " + ChatColor.DARK_PURPLE + "Lhe da uma chave branca");
-                sender.sendMessage(ChatColor.GOLD + "/locksRP getLock nivel(1-6) " + ChatColor.DARK_PURPLE + "Lhe da uma tranca do nivel informado");
+                commandAjuda(args, player);
         }else{
                 Itemmanager items = new Itemmanager();
                 if(args[0].equalsIgnoreCase("getkey")){
@@ -88,8 +86,7 @@ public class LocksRPCommands implements CommandExecutor {
                         ItemMeta meta = itemHand.getItemMeta();
                         if(NameSpacedKeys.isLock(meta) && NameSpacedKeys.hasKeyCode(meta)){
                             String lockCode = NameSpacedKeys.getNameSpacedKey(meta,"keyCode");
-                            Itemmanager itemManager = new Itemmanager();
-                            ItemStack chave = itemManager.generateKey(lockCode);
+                            ItemStack chave = items.generateKey(lockCode);
                             player.getInventory().addItem(chave);
 
                             player.sendMessage(ChatColor.DARK_GREEN + "[LocksRP]:" + ChatColor.WHITE +
@@ -101,9 +98,36 @@ public class LocksRPCommands implements CommandExecutor {
                         player.sendMessage(ChatColor.RED + "Segure uma tranca na mão para gerar uma chave");
                     }
 
+                }else if(args[0].equalsIgnoreCase("getCustomKey")){
+                    if(args[1] != null){
+                        String code = args[1];
+
+                        ItemStack chave = items.generateKey(code);
+
+                        player.getInventory().addItem(chave);
+                        player.sendMessage(ChatColor.DARK_GREEN + "[LocksRP]:" + ChatColor.WHITE +
+                                " Você cria uma nova chave, unica");
+                    }
+                }else{
+                    commandAjuda(args, player);
                 }
             }
         }
         return false;
+    }
+
+
+    public void commandAjuda(String[] args, Player sender) {
+        sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]" + ChatColor.WHITE + "HELP");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getkey " + ChatColor.DARK_PURPLE + "Lhe da uma chave branca");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getLock nivel(1-6) " + ChatColor.DARK_PURPLE +
+                "Lhe da uma tranca do nivel informado");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getLockPick " + ChatColor.DARK_PURPLE + " Lhe da um lockpick");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getLockRemover "
+                + ChatColor.DARK_PURPLE + " Lhe da um lockRemover");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getKeyOfLock " + ChatColor.DARK_PURPLE + " Lhe da uma chave da " +
+                "tranca que você esta segurando na mão");
+        sender.sendMessage(ChatColor.GOLD + "/locksRP getCustomKey  + codigo" + ChatColor.DARK_PURPLE + " Lhe da uma chave com " +
+                "codigo especial que você informar");
     }
 }

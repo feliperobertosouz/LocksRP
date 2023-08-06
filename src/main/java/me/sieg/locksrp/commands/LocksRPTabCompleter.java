@@ -24,6 +24,7 @@ public class LocksRPTabCompleter implements TabCompleter {
             results.add("getData");
             results.add("getLockRemover");
             results.add("getKeyofLock");
+            results.add("getCustomKey");
         }else if(args.length == 2){
             if(args[0].equalsIgnoreCase("getLock")){
                 results.add("1");

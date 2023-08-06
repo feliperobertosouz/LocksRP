@@ -180,6 +180,17 @@ public class PlayerInteract implements Listener {
                         }
                     }
                 }
+            }else if(clickedBlock != null && clickedBlock.getType() == Material.GRINDSTONE){
+                ItemStack item = player.getInventory().getItemInMainHand();
+                    if(item != null && item.hasItemMeta()){
+                        if(NameSpacedKeys.isKey(item.getItemMeta())){
+                            event.setCancelled(true);
+                            Integer amount = item.getAmount();
+                            Itemmanager items = new Itemmanager();
+                            player.getInventory().setItemInMainHand(items.getChaveItem(amount));
+                            player.playSound(player.getLocation(), Sound.BLOCK_GRINDSTONE_USE, 1f, 1f);
+                        }
+                    }
             }
         }
 

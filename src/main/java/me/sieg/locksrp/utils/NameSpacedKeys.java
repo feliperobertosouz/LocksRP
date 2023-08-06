@@ -47,7 +47,6 @@ public class NameSpacedKeys {
                                 PersistentDataType.BYTE)){
             return true;
         }
-
         return false;
     }
 
