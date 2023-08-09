@@ -25,10 +25,6 @@ public class ChestKeeper {
         lastClickedChests.put(playerId, doorBlock);
     }
 
-    // Função que recebe um UUID (player) e retorna o bloco (porta) do mapa
-    public static Block getLastClickedDoor(UUID playerId) {
-        return lastClickedChests.get(playerId);
-    }
 
         public static List<Block> getAllChests() {
             return new ArrayList<>(lastClickedChests.values());

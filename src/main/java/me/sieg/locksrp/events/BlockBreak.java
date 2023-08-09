@@ -26,12 +26,14 @@ public class BlockBreak implements Listener {
         if (SaveDoor.isDoor(block)) {
             SaveDoor saveDoor = new SaveDoor();
             Location loc = event.getBlock().getLocation();
+            //Checa se a porta esta registrada
             if(saveDoor.isLocationRegistered(loc)){
+                //Checa se a porta esta trancada e o player não tem permissão
                 if(saveDoor.isDoorLocked(loc) && !player.hasPermission("locksrp.admin")){
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "A porta esta trancada, destranque antes de tirar");
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-                }else if(!saveDoor.isDoorLocked(loc)){
+                }else if(!saveDoor.isDoorLocked(loc) || player.hasPermission("locksrp.admin")){ //se a porta não estiver trancada, pode quebrar
                     if(block instanceof Door){
                         Door doorData = (Door) block.getBlockData();
                         // Verifica se é a parte de cima da porta

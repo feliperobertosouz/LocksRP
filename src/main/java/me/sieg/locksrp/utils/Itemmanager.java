@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Itemmanager {
 
+    //Itemmanager class is responsible to create the item stacks of plugin
     protected int customModelDataKey = 9999;
 
     protected int customModelDataLockPick = 9940;
