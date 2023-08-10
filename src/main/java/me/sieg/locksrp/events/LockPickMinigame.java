@@ -47,27 +47,30 @@ public class LockPickMinigame implements Listener {
         ItemMeta ironMeta = ironIngot.getItemMeta();
         ironMeta.setDisplayName("PINO");
         ironIngot.setItemMeta(ironMeta);
-        int minimo = 2;
-        int quantidade = 9 + minimo + level;
-        List<Integer> numeros = numerosAleatorios(level + minimo);
+        int min = 3;
+        int amount = 9 + min + level;
+        List<Integer> numbers = numbersRandom(level + min);
 
         for (int i = 0; i < 9; i++) {
             menu.setItem(i, glassPane);
         }
 
 
-        int contador = 1;
-        for(int i = 9; i < quantidade; i++){
+        int count = 1;
+        for(int i = 9; i < amount; i++){
 
-            ironMeta = NameSpacedKeys.setNameSpacedKeyInt(ironMeta, "order", numeros.get(contador - 1));
-            contador++;
+            ironMeta = NameSpacedKeys.setNameSpacedKeyInt(ironMeta, "order", numbers.get(count - 1));
+            count++;
             ironIngot.setItemMeta(ironMeta);
             menu.setItem(i,ironIngot);
 
         }
         ItemStack chances = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta chancesMeta = chances.getItemMeta();
-        chancesMeta.setDisplayName("" + (15 - (level * 2)));
+        if(level == 1){
+            level = 5;
+        }
+        chancesMeta.setDisplayName("" + (8 - level));
         chances.setItemMeta(chancesMeta);
         menu.setItem(0,chances);
         player.openInventory(menu);
@@ -92,16 +95,16 @@ public class LockPickMinigame implements Listener {
             }
 
             Integer level = countItemAmount(event.getInventory(), Material.IRON_INGOT);
-            List<Integer> acertados = numerosSelecionados(level, event.getInventory());
+            List<Integer> success_hit = numbersSelecionados(level, event.getInventory());
 
             // Verifica se o jogador clicou em um slot válido
             if (event.getSlot() >= 9 && event.getSlot() <= 17 && event.getInventory().getItem(event.getSlot()) != null) {
                 Integer order = NameSpacedKeys.getNameSpacedKeyInt(event.getCurrentItem().getItemMeta(), "order");
-                if (order == 1 && acertados.isEmpty()) {
+                if (order == 1 && success_hit.isEmpty()) {
                     Integer slot = event.getSlot();
                     event.getInventory().setItem(slot + 9, event.getCurrentItem());
                     event.getInventory().setItem(slot, new ItemStack(Material.AIR));
-                } else if (!acertados.isEmpty() && order == Collections.max(acertados) + 1) {
+                } else if (!success_hit.isEmpty() && order == Collections.max(success_hit) + 1) {
                     Integer slot = event.getSlot();
                     event.getInventory().setItem(slot + 9, event.getCurrentItem());
                     event.getInventory().setItem(slot, new ItemStack(Material.AIR));
@@ -153,23 +156,23 @@ public class LockPickMinigame implements Listener {
         }
     }
 
-    public List<Integer> numerosAleatorios(int level){
-        List<Integer> numeros = new ArrayList<>();
+    public List<Integer> numbersRandom(int level){
+        List<Integer> numbers = new ArrayList<>();
 
         // Adiciona números de 1 a 9 na lista
         for (int i = 1; i <= level; i++) {
-            numeros.add(i);
+            numbers.add(i);
         }
 
         // Embaralha a lista aleatoriamente
-         Collections.shuffle(numeros);
+         Collections.shuffle(numbers);
 
-        return numeros;
+        return numbers;
     }
 
 
-    public List<Integer> numerosSelecionados(int level, Inventory inventory){
-        List<Integer> numeros = new ArrayList<>();
+    public List<Integer> numbersSelecionados(int level, Inventory inventory){
+        List<Integer> numbers = new ArrayList<>();
 
         for (int slot = 18; slot <= 26; slot++) {
             ItemStack item = inventory.getItem(slot);
@@ -182,13 +185,13 @@ public class LockPickMinigame implements Listener {
                 if (meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(),"order"), PersistentDataType.INTEGER)) {
                     if(meta.getPersistentDataContainer().get(new NamespacedKey(Main.getPlugin(),"order"), PersistentDataType.INTEGER) != null){
                         int orderValue = meta.getPersistentDataContainer().get(new NamespacedKey(Main.getPlugin(),"order"), PersistentDataType.INTEGER);
-                        numeros.add(orderValue);
+                        numbers.add(orderValue);
                     }
                 }
             }
         }
 
-        return numeros;
+        return numbers;
     }
 
 
