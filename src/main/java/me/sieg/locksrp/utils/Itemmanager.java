@@ -19,11 +19,11 @@ public class Itemmanager {
     protected int customModelDataLockRemover = 9940;
 
 
-    public ItemStack getChaveItem(int amount){
+    public ItemStack getKeyItem(int amount){
         ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
         ItemMeta meta = chave.getItemMeta();
 
-        meta.setDisplayName(ChatColor.WHITE + "Chave");
+        meta.setDisplayName(ChatColor.WHITE + "Key");
 
         meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
         meta.setCustomModelData(this.customModelDataKey);
@@ -42,7 +42,7 @@ public class Itemmanager {
         meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
         meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
 
-        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + level));
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level));
 
         meta.setCustomModelData(customModel);
         tranca.setItemMeta(meta);
@@ -51,12 +51,12 @@ public class Itemmanager {
     }
 
     public ItemStack generateKey(String code){
-        ItemStack chave = getChaveItem(1);
+        ItemStack chave = getKeyItem(1);
 
         ItemMeta meta = chave.getItemMeta();
 
         NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
-        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Chave: " + ChatColor.DARK_PURPLE + code));
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
         chave.setItemMeta(meta);
         return chave;
 
@@ -85,7 +85,7 @@ public class Itemmanager {
         meta = NameSpacedKeys.setNameSpacedKey(meta,"keyCode", code);
 
         List<String> newlore = new ArrayList<>();
-        newlore.add(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + level);
+        newlore.add(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level);
         newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + code);
         meta.setLore(newlore);
         meta.setCustomModelData(customModel);
@@ -116,7 +116,7 @@ public class Itemmanager {
         meta = NameSpacedKeys.setNameSpacedKey(meta,"isLockRemover", "true");
         meta.setDisplayName(ChatColor.GRAY + "LOCK REMOVER");
         List<String> newlore = new ArrayList<>();
-        newlore.add(ChatColor.WHITE + "Nivel: " + ChatColor.GOLD + "REMOVEDOR DE TRANCAS");
+        newlore.add(ChatColor.GOLD + "RIGHT CLICK TO REMOVE THE LOCK OF BLOCK");
         meta.setCustomModelData(this.customModelDataLockRemover);
         meta.setLore(newlore);
         lockRemover.setItemMeta(meta);
