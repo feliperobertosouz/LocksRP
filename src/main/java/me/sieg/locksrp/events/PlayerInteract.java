@@ -44,7 +44,7 @@ public class PlayerInteract implements Listener {
                         String code = KeyCodeGenerator.generateUniqueCode();
                         ItemMeta meta = item.getItemMeta();
                         meta = NameSpacedKeys.setNameSpacedKey(meta, "keyCode", code);
-                        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Chave:" + ChatColor.DARK_PURPLE + code));
+                        meta.setLore(Collections.singletonList(ChatColor.WHITE + "key:" + ChatColor.DARK_PURPLE + code));
                         item.setItemMeta(meta);
                         player.getInventory().setItemInMainHand(item);
                     }

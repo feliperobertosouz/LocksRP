@@ -45,7 +45,7 @@ public class LockPickMinigame implements Listener {
         glassPane.setItemMeta(glassMeta);
         ItemStack ironIngot = new ItemStack(Material.IRON_INGOT);
         ItemMeta ironMeta = ironIngot.getItemMeta();
-        ironMeta.setDisplayName("PINO");
+        ironMeta.setDisplayName("LOCK");
         ironIngot.setItemMeta(ironMeta);
         int min = 3;
         int amount = 9 + min + level;
@@ -67,10 +67,19 @@ public class LockPickMinigame implements Listener {
         }
         ItemStack chances = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta chancesMeta = chances.getItemMeta();
+
         if(level == 1){
-            level = 5;
+            level = 4;
         }
-        chancesMeta.setDisplayName("" + (8 - level));
+        else if(level == 2){
+            level = 4;
+        }
+        else if(level ==3){
+            level = 4;
+        }
+
+        Integer chancePanel = 9 - level;
+        chancesMeta.setDisplayName("" + chancePanel);
         chances.setItemMeta(chancesMeta);
         menu.setItem(0,chances);
         player.openInventory(menu);
