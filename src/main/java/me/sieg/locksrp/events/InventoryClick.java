@@ -41,7 +41,7 @@ public class InventoryClick implements Listener {
                             if (NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "keyCode") == null) {
                                 ItemMeta clickMeta = clickedItem.getItemMeta();
                                 clickMeta = NameSpacedKeys.setNameSpacedKey(clickMeta, "keyCode", keyCode);
-                                clickMeta.setLore(Collections.singletonList(ChatColor.WHITE + "Chave:" + ChatColor.DARK_PURPLE + keyCode));
+                                clickMeta.setLore(Collections.singletonList(ChatColor.WHITE + "Key:" + ChatColor.DARK_PURPLE + keyCode));
                                 clickedItem.setItemMeta(clickMeta);
 
                                 if (player.getGameMode() != GameMode.CREATIVE) {

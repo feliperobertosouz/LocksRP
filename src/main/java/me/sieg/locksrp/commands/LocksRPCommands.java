@@ -1,5 +1,4 @@
 package me.sieg.locksrp.commands;
-
 import me.sieg.locksrp.utils.Itemmanager;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
@@ -28,7 +27,7 @@ public class LocksRPCommands implements CommandExecutor {
                 Itemmanager items = new Itemmanager();
                 if(args[0].equalsIgnoreCase("getkey")){
                     sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP] " + ChatColor.DARK_PURPLE + "Você recebeu uma chave");
-                    ItemStack chave = items.getChaveItem(1);
+                    ItemStack chave = items.getKeyItem(1);
                     player.getInventory().addItem(chave);
                 }else if(args[0].equalsIgnoreCase("getLock")){
                     try{

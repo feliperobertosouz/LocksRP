@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 public class InventoryChecker {
-
+    //Inventory checker is a class responsible to check if player has correct items and remove itens
     public static boolean hasCorrectKey(Player player, String keyCode) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && item.hasItemMeta()) {

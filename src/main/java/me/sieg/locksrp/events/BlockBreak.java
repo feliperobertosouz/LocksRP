@@ -22,25 +22,29 @@ public class BlockBreak implements Listener {
     public void onBreakBlock(BlockBreakEvent event) {
         Block block = event.getBlock();
         Player player = event.getPlayer();
-        // Verifica se o bloco quebrado é uma porta
+        // check if the clicked block is a door
         if (SaveDoor.isDoor(block)) {
             SaveDoor saveDoor = new SaveDoor();
             Location loc = event.getBlock().getLocation();
+            //check if the door is registered
             if(saveDoor.isLocationRegistered(loc)){
+                //Checa se a porta esta trancada e o player não tem permissão
+                //Check if the door is locked or the player has permission
                 if(saveDoor.isDoorLocked(loc) && !player.hasPermission("locksrp.admin")){
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "A porta esta trancada, destranque antes de tirar");
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-                }else if(!saveDoor.isDoorLocked(loc)){
+                }else if(!saveDoor.isDoorLocked(loc) || player.hasPermission("locksrp.admin")){
                     if(block instanceof Door){
                         Door doorData = (Door) block.getBlockData();
                         // Verifica se é a parte de cima da porta
+                        //check if clicked block is the top of door
                         if (doorData.getHalf() == Door.Half.TOP) {
-                            // Pega a localização da parte de baixo da porta
+                            //get bottom door
                             loc = SaveDoor.getBlockBelow(block.getLocation());
 
                         }
-                        // Remove a localização da parte de baixo da porta do arquivo doors.yml
+                        // Remove the locatio of doors.yml
 
                     }
                     Itemmanager itemManager = new Itemmanager();

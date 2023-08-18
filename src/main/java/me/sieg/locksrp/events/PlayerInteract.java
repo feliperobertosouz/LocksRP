@@ -119,7 +119,6 @@ public class PlayerInteract implements Listener {
                             }
                         }
                         // Faça o que for necessário com a informação se a porta está trancada ou não
-                        boolean registrada = saveDoor.isLocationRegistered(event.getClickedBlock().getLocation());
 
                         ItemStack item = player.getInventory().getItemInMainHand();
                         if (item != null && item.getType() != Material.AIR && NameSpacedKeys.isLock(item.getItemMeta())) {
@@ -187,7 +186,7 @@ public class PlayerInteract implements Listener {
                             event.setCancelled(true);
                             Integer amount = item.getAmount();
                             Itemmanager items = new Itemmanager();
-                            player.getInventory().setItemInMainHand(items.getChaveItem(amount));
+                            player.getInventory().setItemInMainHand(items.getKeyItem(amount));
                             player.playSound(player.getLocation(), Sound.BLOCK_GRINDSTONE_USE, 1f, 1f);
                         }
                     }

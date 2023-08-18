@@ -37,7 +37,7 @@ public final class Main extends JavaPlugin {
        getCommand("LocksRP").setTabCompleter(new LocksRPTabCompleter());
 
         Logger logger = getLogger();
-        logger.info("INICIALIZANDO LOCKSRP");
+        logger.info("LOCSKRP INITIALIZED");
     }
 
     @Override
