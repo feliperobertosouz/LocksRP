@@ -1,17 +1,12 @@
 package me.sieg.locksrp.events;
 
-import me.sieg.locksrp.Main;
-import me.sieg.locksrp.utils.Itemmanager;
 import me.sieg.locksrp.utils.NameSpacedKeys;
-import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

@@ -6,10 +6,7 @@ import me.sieg.locksrp.utils.InventoryChecker;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import me.sieg.locksrp.utils.SaveDoor;
 import org.bukkit.*;
-import org.bukkit.block.Barrel;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -151,6 +148,10 @@ public class LockPickMinigame implements Listener {
                         Barrel barrel = (Barrel) block.getState();
                         Inventory barrelInventory = barrel.getInventory();
                         player.openInventory(barrelInventory);
+                    }else if(block != null && block.getState() instanceof ShulkerBox){
+                        ShulkerBox shulkerBox = (ShulkerBox) block.getState();
+                        Inventory shulkerInventory = shulkerBox.getInventory();
+                        player.openInventory(shulkerInventory);
                     }
                 }
             }

@@ -43,7 +43,18 @@ public class InventoryChecker {
 
         return false;
     }
+    public static boolean hasUniversalKey(Player player){
+        for(ItemStack item : player.getInventory().getContents()){
+            if(item != null && item.hasItemMeta()){
+                ItemMeta meta = item.getItemMeta();
+                if(NameSpacedKeys.isUniversalKey(meta)){
+                    return true;
+                }
+            }
+        }
 
+        return false;
+    }
 
 
     public static void removeLockPick(Player player) {

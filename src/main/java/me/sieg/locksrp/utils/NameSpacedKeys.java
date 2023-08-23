@@ -61,6 +61,17 @@ public class NameSpacedKeys {
         return false;
     }
 
+    public static  Boolean isUniversalKey(ItemMeta meta){
+
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isUniversalKey"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isUniversalKey"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
     public static  Boolean isLockPick(ItemMeta meta){
 
         if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLockPick"),

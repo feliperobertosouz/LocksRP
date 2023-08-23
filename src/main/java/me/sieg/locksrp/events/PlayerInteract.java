@@ -4,9 +4,8 @@ import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.Bisected;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Fence;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
@@ -50,7 +49,8 @@ public class PlayerInteract implements Listener {
                     }
                 }
             } else if (clickedBlock != null && clickedBlock.getType() == Material.CHEST
-                    || clickedBlock.getType() == Material.BARREL) {
+                    || clickedBlock.getType() == Material.BARREL
+                    || clickedBlock.getState()  instanceof ShulkerBox) {
                 Inventory chestInventory = player.getInventory();
                 if(clickedBlock.getType() == Material.CHEST){
                     Chest chest = (Chest) clickedBlock.getState();
@@ -58,10 +58,13 @@ public class PlayerInteract implements Listener {
                 }else if(clickedBlock.getType() == Material.BARREL){
                     Barrel barrel = (Barrel) clickedBlock.getState();
                     chestInventory = barrel.getInventory();
+                }else if(clickedBlock.getState() instanceof ShulkerBox){
+                    ShulkerBox shulkerBox = (ShulkerBox) clickedBlock.getState();
+                    chestInventory = shulkerBox.getInventory();
                 }
 
 
-                if (!player.hasPermission("locksrp.admin")) {
+                if (!InventoryChecker.hasUniversalKey(player)) {
                     ItemStack firstItem = chestInventory.getItem(0);
 
                     if (firstItem != null) {
@@ -78,7 +81,12 @@ public class PlayerInteract implements Listener {
                                     if (InventoryChecker.hasLockPick(player)) {
                                         chestlist.setLastClickedChest(player.getUniqueId(), clickedBlock);
                                         LockPickMinigame minigame = new LockPickMinigame(chestlist);
-                                        minigame.openCustomGUI(player, level);
+                                        if(level != 6){
+                                            minigame.openCustomGUI(player, level);
+                                        }else{
+                                            player.sendMessage("A tranca parece muito poderosa para se fazer lockpick");
+                                        }
+
 
 
                                     } else {
@@ -106,7 +114,7 @@ public class PlayerInteract implements Listener {
                             }
                         }
 
-                        if(isLocked && !player.hasPermission("locksrp.admin")){
+                        if(isLocked){
                             player.sendMessage(ChatColor.RED + "A PORTA ESTA TRANCADA");
                             event.setCancelled(true);
                             String lockCode = saveDoor.getLockCode(loc);
@@ -115,7 +123,12 @@ public class PlayerInteract implements Listener {
                                 chestlist.setLastClickedChest(player.getUniqueId(),block);
                                 LockPickMinigame minigame = new LockPickMinigame(chestlist);
                                 int level = saveDoor.getLockLevel(loc);
-                                minigame.openCustomGUI(player, level);
+                                if(level != 6){
+                                    minigame.openCustomGUI(player, level);
+                                }else{
+                                    player.sendMessage("A tranca parece muito poderosa para se fazer lockpick");
+                                }
+
                             }
                         }
                         // Faça o que for necessário com a informação se a porta está trancada ou não
@@ -144,12 +157,12 @@ public class PlayerInteract implements Listener {
                                     }
                                 }
                             }
-                        } else if ( item.hasItemMeta() && NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta())
-                                && saveDoor.isLocationRegistered(loc)) {
+                        } else if ( item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta())
+                                && saveDoor.isLocationRegistered(loc) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) && saveDoor.isLocationRegistered(loc))){
                             String lockCode = saveDoor.getLockCode(loc);
                             String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(),"keyCode");
 
-                            if(lockCode.equals(keyCode)){
+                            if(lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())){
                                 if (isLocked) {
                                     player.sendMessage("DESTRANCANDO PORTA");
                                     saveDoor.setDoorLocked(loc, false);
@@ -162,10 +175,10 @@ public class PlayerInteract implements Listener {
                                 player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 1.0f, 0.1f);
                                 player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1.0f, 1.5f);
                             }
-                        }else if (item.hasItemMeta() && NameSpacedKeys.isLockRemover(item.getItemMeta())){
+                        }else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isLockRemover(item.getItemMeta())){
                             if(saveDoor.isLocationRegistered(loc)){
                                 if(!saveDoor.isDoorLocked(loc) || player.isOp() || player.hasPermission("locksrp.admin")){
-                                    Itemmanager itemManager = new Itemmanager();
+                                    ItemManager itemManager = new ItemManager();
                                     String keyCode = saveDoor.getLockCode(loc);
                                     Integer level = saveDoor.getLockLevel(loc);
                                     ItemStack itemDrop = itemManager.generateLock(level,keyCode);
@@ -185,7 +198,7 @@ public class PlayerInteract implements Listener {
                         if(NameSpacedKeys.isKey(item.getItemMeta())){
                             event.setCancelled(true);
                             Integer amount = item.getAmount();
-                            Itemmanager items = new Itemmanager();
+                            ItemManager items = new ItemManager();
                             player.getInventory().setItemInMainHand(items.getKeyItem(amount));
                             player.playSound(player.getLocation(), Sound.BLOCK_GRINDSTONE_USE, 1f, 1f);
                         }
