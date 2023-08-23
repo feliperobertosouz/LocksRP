@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Itemmanager {
+public class ItemManager {
 
     //Itemmanager class is responsible to create the item stacks of plugin
     protected int customModelDataKey = 9999;
+
+    protected int customModelDataUniversalKey = 9998;
 
     protected int customModelDataLockPick = 9940;
 
@@ -27,6 +29,18 @@ public class Itemmanager {
 
         meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
         meta.setCustomModelData(this.customModelDataKey);
+        chave.setItemMeta(meta);
+        return chave;
+    }
+
+    public ItemStack getUniversalKey(){
+        ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
+        ItemMeta meta = chave.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "Universal Key");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isUniversalKey","true");
+        meta.setCustomModelData(this.customModelDataUniversalKey);
         chave.setItemMeta(meta);
         return chave;
     }

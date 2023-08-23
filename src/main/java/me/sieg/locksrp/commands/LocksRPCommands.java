@@ -1,11 +1,10 @@
 package me.sieg.locksrp.commands;
-import me.sieg.locksrp.utils.Itemmanager;
+import me.sieg.locksrp.utils.ItemManager;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,7 +23,7 @@ public class LocksRPCommands implements CommandExecutor {
             if(args.length == 0){
                 commandAjuda(args, player);
         }else{
-                Itemmanager items = new Itemmanager();
+                ItemManager items = new ItemManager();
                 if(args[0].equalsIgnoreCase("getkey")){
                     sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP] " + ChatColor.DARK_PURPLE + "Você recebeu uma chave");
                     ItemStack chave = items.getKeyItem(1);
@@ -107,6 +106,10 @@ public class LocksRPCommands implements CommandExecutor {
                         player.sendMessage(ChatColor.DARK_GREEN + "[LocksRP]:" + ChatColor.WHITE +
                                 " Você cria uma nova chave, unica");
                     }
+                }else if(args[0].equalsIgnoreCase("getUniversalKey")){
+                    sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma chave universal");
+                    ItemStack universalKey = items.getUniversalKey();
+                    player.getInventory().addItem(universalKey);
                 }else{
                     commandAjuda(args, player);
                 }

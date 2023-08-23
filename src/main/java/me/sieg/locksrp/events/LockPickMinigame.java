@@ -6,10 +6,7 @@ import me.sieg.locksrp.utils.InventoryChecker;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import me.sieg.locksrp.utils.SaveDoor;
 import org.bukkit.*;
-import org.bukkit.block.Barrel;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,7 +42,7 @@ public class LockPickMinigame implements Listener {
         glassPane.setItemMeta(glassMeta);
         ItemStack ironIngot = new ItemStack(Material.IRON_INGOT);
         ItemMeta ironMeta = ironIngot.getItemMeta();
-        ironMeta.setDisplayName("PINO");
+        ironMeta.setDisplayName("LOCK");
         ironIngot.setItemMeta(ironMeta);
         int min = 3;
         int amount = 9 + min + level;
@@ -67,10 +64,19 @@ public class LockPickMinigame implements Listener {
         }
         ItemStack chances = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         ItemMeta chancesMeta = chances.getItemMeta();
+
         if(level == 1){
-            level = 5;
+            level = 4;
         }
-        chancesMeta.setDisplayName("" + (8 - level));
+        else if(level == 2){
+            level = 4;
+        }
+        else if(level ==3){
+            level = 4;
+        }
+
+        Integer chancePanel = 9 - level;
+        chancesMeta.setDisplayName("" + chancePanel);
         chances.setItemMeta(chancesMeta);
         menu.setItem(0,chances);
         player.openInventory(menu);
@@ -142,6 +148,10 @@ public class LockPickMinigame implements Listener {
                         Barrel barrel = (Barrel) block.getState();
                         Inventory barrelInventory = barrel.getInventory();
                         player.openInventory(barrelInventory);
+                    }else if(block != null && block.getState() instanceof ShulkerBox){
+                        ShulkerBox shulkerBox = (ShulkerBox) block.getState();
+                        Inventory shulkerInventory = shulkerBox.getInventory();
+                        player.openInventory(shulkerInventory);
                     }
                 }
             }
