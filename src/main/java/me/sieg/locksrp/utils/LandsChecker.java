@@ -22,27 +22,32 @@ public class LandsChecker {
 
 
     public static boolean PlayerCanBreakLand(Player player) {
-        LandsIntegration api = LandsIntegration.of(Main.getPlugin());
-        // Obtém a localização atual do jogador
-        Location playerLocation = player.getLocation();
+        if(!Main.getLandsPluginPresent()){
+            return true;
+        }else{
+            LandsIntegration api = LandsIntegration.of(Main.getPlugin());
+            // Obtém a localização atual do jogador
+            Location playerLocation = player.getLocation();
 
-        Area area = api.getArea(playerLocation);
-        if (area != null) {
-            //System.out.println("" + area);
+            Area area = api.getArea(playerLocation);
+            if (area != null) {
+                //System.out.println("" + area);
 
-            Role role = area.getRole(player.getUniqueId());
-            //System.out.println("FLAG" + role.hasFlag(Flags.BLOCK_BREAK));
+                Role role = area.getRole(player.getUniqueId());
+                //System.out.println("FLAG" + role.hasFlag(Flags.BLOCK_BREAK));
 
-            LandPlayer landPlayer = api.getLandPlayer(player.getUniqueId());
-            //System.out.println("LAND PLAYER" + landPlayer);
-            //System.out.println("AREA " + area);
+                LandPlayer landPlayer = api.getLandPlayer(player.getUniqueId());
+                //System.out.println("LAND PLAYER" + landPlayer);
+                //System.out.println("AREA " + area);
 
-            if (role.hasFlag(Flags.BLOCK_BREAK)) {
-                return true;
-            } else {
-                return false;
+                if (role.hasFlag(Flags.BLOCK_BREAK)) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
+            return false;
         }
-        return false;
-    }
+        }
+
 }
