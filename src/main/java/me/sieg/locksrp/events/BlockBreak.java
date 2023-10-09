@@ -1,13 +1,10 @@
 package me.sieg.locksrp.events;
-
-import me.sieg.locksrp.utils.InventoryChecker;
-import me.sieg.locksrp.utils.ItemManager;
-import me.sieg.locksrp.utils.NameSpacedKeys;
-import me.sieg.locksrp.utils.SaveDoor;
+import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,14 +27,21 @@ public class BlockBreak implements Listener {
             SaveDoor saveDoor = new SaveDoor();
             Location loc = event.getBlock().getLocation();
             //check if the door is registered
+            Door doorDataDois = (Door) block.getBlockData();
+            if(doorDataDois.getHalf() == Bisected.Half.TOP){
+                loc = SaveDoor.getBlockBelow(block.getLocation());
+            }
             if (saveDoor.isLocationRegistered(loc)) {
                 //Checa se a porta esta trancada e o player não tem permissão
                 //Check if the door is locked or the player has permission
-                if (saveDoor.isDoorLocked(loc) && !player.hasPermission("locksrp.admin")) {
+            //System.out.println("QUEBRADO PORTA");
+                if (saveDoor.isDoorLocked(loc)) {
+                    //System.out.println("PORTA TRANCADA");
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "A porta esta trancada, destranque antes de tirar");
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-                } else if (!saveDoor.isDoorLocked(loc) || player.hasPermission("locksrp.admin")) {
+                } else if (!saveDoor.isDoorLocked(loc)) {
+                    //System.out.println("PORTA DESTRANCADA");
                     if (block instanceof Door) {
                         Door doorData = (Door) block.getBlockData();
                         // Verifica se é a parte de cima da porta
@@ -47,16 +51,23 @@ public class BlockBreak implements Listener {
                             loc = SaveDoor.getBlockBelow(block.getLocation());
 
                         }
+
                         // Remove the locatio of doors.yml
 
                     }
-                    ItemManager itemManager = new ItemManager();
-                    String keyCode = saveDoor.getLockCode(loc);
-                    Integer level = saveDoor.getLockLevel(loc);
-                    ItemStack itemDrop = itemManager.generateLock(level, keyCode);
-                    saveDoor.dropItemOnGround(loc, itemDrop);
-                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
-                    saveDoor.removeLocationFromFile(loc);
+                    if(LandsChecker.PlayerCanBreakLand(player)) {
+                        //System.out.println("PODE RETIRAR A TRANCA");
+                        ItemManager itemManager = new ItemManager();
+                        String keyCode = saveDoor.getLockCode(loc);
+                        Integer level = saveDoor.getLockLevel(loc);
+                        ItemStack itemDrop = itemManager.generateLock(level, keyCode);
+                        saveDoor.dropItemOnGround(loc, itemDrop);
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
+                        saveDoor.removeLocationFromFile(loc);
+                    }else{
+                        //System.out.println("NÃO PODE RETIRAR A TRANCA");
+                        event.setCancelled(true);
+                    }
                 }
             }
 
