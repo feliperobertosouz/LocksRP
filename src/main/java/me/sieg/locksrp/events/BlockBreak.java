@@ -57,8 +57,7 @@ public class BlockBreak implements Listener {
                 }
             }
 
-        } else if (block.getType() == Material.CHEST
-                || block.getType() == Material.BARREL) {
+        } else if (block.getType() == Material.CHEST  || block.getType() == Material.BARREL) {
             Inventory chestInventory = player.getInventory();
             if (block.getType() == Material.CHEST) {
                 Chest chest = (Chest) block.getState();

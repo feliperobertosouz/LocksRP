@@ -45,8 +45,8 @@ public class LockPickMinigame implements Listener {
         ironMeta.setDisplayName("LOCK");
         ironIngot.setItemMeta(ironMeta);
         int min = 3;
-        int amount = 9 + min + level;
-        List<Integer> numbers = numbersRandom(level + min);
+        int amount = 9 + min + level - 1;
+        List<Integer> numbers = numbersRandom(level+min);
 
         for (int i = 0; i < 9; i++) {
             menu.setItem(i, glassPane);
@@ -66,16 +66,16 @@ public class LockPickMinigame implements Listener {
         ItemMeta chancesMeta = chances.getItemMeta();
 
         if(level == 1){
-            level = 4;
+            level = 7;
         }
         else if(level == 2){
-            level = 4;
+            level = 6;
         }
         else if(level ==3){
-            level = 4;
+            level = 5;
         }
 
-        Integer chancePanel = 9 - level;
+        Integer chancePanel = 12 - level ;
         chancesMeta.setDisplayName("" + chancePanel);
         chances.setItemMeta(chancesMeta);
         menu.setItem(0,chances);
@@ -102,10 +102,12 @@ public class LockPickMinigame implements Listener {
 
             Integer level = countItemAmount(event.getInventory(), Material.IRON_INGOT);
             List<Integer> success_hit = numbersSelecionados(level, event.getInventory());
+            System.out.println("success_hit: " + success_hit);
 
             // Verifica se o jogador clicou em um slot válido
             if (event.getSlot() >= 9 && event.getSlot() <= 17 && event.getInventory().getItem(event.getSlot()) != null) {
                 Integer order = NameSpacedKeys.getNameSpacedKeyInt(event.getCurrentItem().getItemMeta(), "order");
+                System.out.println("order: " + order);
                 if (order == 1 && success_hit.isEmpty()) {
                     Integer slot = event.getSlot();
                     event.getInventory().setItem(slot + 9, event.getCurrentItem());
@@ -170,7 +172,7 @@ public class LockPickMinigame implements Listener {
         List<Integer> numbers = new ArrayList<>();
 
         // Adiciona números de 1 a 9 na lista
-        for (int i = 1; i <= level; i++) {
+        for (int i = 1; i < level; i++) {
             numbers.add(i);
         }
 

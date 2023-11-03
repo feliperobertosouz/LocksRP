@@ -75,6 +75,19 @@ public class ItemManager {
         return chave;
 
     }
+
+    public ItemStack generateKey(ItemStack item, String code){
+        ItemStack chave = item;
+
+        ItemMeta meta = chave.getItemMeta();
+
+        NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
+        chave.setItemMeta(meta);
+        return chave;
+
+    }
+
     public ItemStack generateLock(int level, String code){
         int customModel = 9999;
         if(level == 1){
