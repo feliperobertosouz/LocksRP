@@ -4,13 +4,10 @@ import me.sieg.locksrp.commands.LocksRPCommands;
 import me.sieg.locksrp.commands.LocksRPTabCompleter;
 import me.sieg.locksrp.events.*;
 import me.sieg.locksrp.utils.ChestKeeper;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
@@ -47,14 +44,30 @@ public final class Main extends JavaPlugin {
     }
 
     private boolean isLandsPluginPresent() {
-        Plugin landsPlugin = getServer().getPluginManager().getPlugin("Lands");
 
+        PluginManager pluginManager = getServer().getPluginManager();
+        String pluginName = "Lands";
+        Plugin pluginLands = null;
         // Verifique se o plugin Lands está carregado e ativo
-        if (landsPlugin != null && landsPlugin.isEnabled()) {
-            landsPluginPresent = true;
+        for (Plugin plugin : pluginManager.getPlugins()) {
+            String nomePlugin = plugin.getName();
+
+            // Remove a parte da versão do nome do plugin
+            if (nomePlugin.startsWith(pluginName)) {
+                pluginLands = plugin;
+                break;
+            }
         }
 
-        return landsPluginPresent;
+        if (pluginLands != null) {
+            // O plugin está instalado, então você pode ativar sua funcionalidade
+            getLogger().info("O plugin " + pluginName + " está instalado.");
+            landsPluginPresent = true;
+            return true;
+            // Ative sua funcionalidade aqui
+        }
+
+        return false;
     }
     @Override
     public void onDisable() {

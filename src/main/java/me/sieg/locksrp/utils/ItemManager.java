@@ -33,6 +33,18 @@ public class ItemManager {
         return chave;
     }
 
+    public ItemStack getKeyItem(int amount, int customModel){
+        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
+        ItemMeta meta = chave.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "Key");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
+        meta.setCustomModelData(customModel);
+        chave.setItemMeta(meta);
+        return chave;
+    }
+
     public ItemStack getUniversalKey(){
         ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
         ItemMeta meta = chave.getItemMeta();
@@ -88,6 +100,9 @@ public class ItemManager {
 
     }
 
+
+
+
     public ItemStack generateLock(int level, String code){
         int customModel = 9999;
         if(level == 1){
@@ -100,6 +115,8 @@ public class ItemManager {
             customModel = 9996;
         }else if(level == 5){
             customModel = 9995;
+        }else if(level == 6){
+            customModel = 9994;
         }
 
         ItemStack tranca = new ItemStack((Material.FLINT));

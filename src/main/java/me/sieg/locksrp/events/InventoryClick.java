@@ -64,17 +64,6 @@ public class InventoryClick implements Listener {
 
                                     ItemMeta clickMeta = clickedItem.getItemMeta();
                                     clickMeta = NameSpacedKeys.setNameSpacedKey(clickMeta, "keyCode", keyCode);
-//                                    if (clickMeta.hasLore()) {
-//                                        List<String> lore;
-//                                        List<String> newlore = new ArrayList<>();
-//                                        lore = clickMeta.getLore();
-//                                        newlore.add(lore.get(0));
-//                                        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + keyCode);
-//                                        clickMeta.setLore(newlore);
-//                                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-//                                        player.sendMessage(ChatColor.GOLD + "Você forja uma nova tranca");
-//                                    }
-//                                    clickedItem.setItemMeta(clickMeta);
 
                                     int level = Integer.parseInt(NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "level"));
                                     messageSender.sendPlayerMessage(player, "&6Você forja uma nova tranca", Sound.BLOCK_ANVIL_USE);

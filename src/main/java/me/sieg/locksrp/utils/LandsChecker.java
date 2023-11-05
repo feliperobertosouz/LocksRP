@@ -1,6 +1,8 @@
 package me.sieg.locksrp.utils;
 
 import me.angeschossen.lands.api.LandsIntegration;
+import me.angeschossen.lands.api.flags.enums.FlagTarget;
+import me.angeschossen.lands.api.flags.enums.RoleFlagCategory;
 import me.angeschossen.lands.api.flags.type.Flags;
 import me.angeschossen.lands.api.flags.type.RoleFlag;
 import me.angeschossen.lands.api.land.Area;
@@ -31,23 +33,50 @@ public class LandsChecker {
 
             Area area = api.getArea(playerLocation);
             if (area != null) {
-                //System.out.println("" + area);
 
                 Role role = area.getRole(player.getUniqueId());
-                //System.out.println("FLAG" + role.hasFlag(Flags.BLOCK_BREAK));
 
                 LandPlayer landPlayer = api.getLandPlayer(player.getUniqueId());
-                //System.out.println("LAND PLAYER" + landPlayer);
-                //System.out.println("AREA " + area);
+
 
                 if (role.hasFlag(Flags.BLOCK_BREAK)) {
                     return true;
                 } else {
                     return false;
                 }
+            }else if(area == null){
+                return true;
             }
             return false;
         }
+        }
+
+        public static boolean PlayerCanPlaceLand(Player player) {
+            if(!Main.getLandsPluginPresent()){
+                return true;
+            }else{
+                LandsIntegration api = LandsIntegration.of(Main.getPlugin());
+                Location playerLocation = player.getLocation();
+
+                Area area = api.getArea(playerLocation);
+                if (area != null) {
+
+                    Role role = area.getRole(player.getUniqueId());
+
+                    LandPlayer landPlayer = api.getLandPlayer(player.getUniqueId());
+
+
+                    if (role.hasFlag(Flags.BLOCK_PLACE)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }else if(area == null){
+                    return true;
+                }
+                return false;
+
+            }
         }
 
 }

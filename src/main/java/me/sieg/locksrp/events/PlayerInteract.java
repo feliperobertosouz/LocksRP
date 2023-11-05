@@ -22,10 +22,14 @@ import java.util.Collections;
 public class PlayerInteract implements Listener {
 
     private ChestKeeper chestlist;
-    public PlayerInteract(ChestKeeper chestlist){
+
+    public PlayerInteract(ChestKeeper chestlist) {
         this.chestlist = chestlist;
 
     }
+
+    ItemManager itemManager = new ItemManager();
+    MessageSender messageSender = new MessageSender();
 
 
     @EventHandler
@@ -33,33 +37,30 @@ public class PlayerInteract implements Listener {
         Player player = event.getPlayer();
 
         Block clickedBlock = event.getClickedBlock();
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-            if (clickedBlock != null && clickedBlock.getType() == Material.SMITHING_TABLE) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null) {
+            if (clickedBlock.getType() == Material.SMITHING_TABLE) {
                 if (player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().hasItemMeta()) {
                     ItemStack item = player.getInventory().getItemInMainHand();
                     if (NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode") == null) {
                         event.setCancelled(true);
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-                        player.sendMessage(ChatColor.GOLD + "Você forja uma nova chave");
+                        messageSender.sendPlayerMessage(player, "&6 Você forja uma nova chave", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
                         String code = KeyCodeGenerator.generateUniqueCode();
                         ItemMeta meta = item.getItemMeta();
-                        meta = NameSpacedKeys.setNameSpacedKey(meta, "keyCode", code);
-                        meta.setLore(Collections.singletonList(ChatColor.WHITE + "key:" + ChatColor.DARK_PURPLE + code));
-                        item.setItemMeta(meta);
+                        item = itemManager.generateKey(item, code);
                         player.getInventory().setItemInMainHand(item);
                     }
                 }
-            } else if (clickedBlock != null && clickedBlock.getType() == Material.CHEST
+            } else if (clickedBlock.getType() == Material.CHEST
                     || clickedBlock.getType() == Material.BARREL
-                    || clickedBlock.getState()  instanceof ShulkerBox) {
+                    || clickedBlock.getState() instanceof ShulkerBox) {
                 Inventory chestInventory = player.getInventory();
-                if(clickedBlock.getType() == Material.CHEST){
+                if (clickedBlock.getType() == Material.CHEST) {
                     Chest chest = (Chest) clickedBlock.getState();
                     chestInventory = chest.getInventory();
-                }else if(clickedBlock.getType() == Material.BARREL){
+                } else if (clickedBlock.getType() == Material.BARREL) {
                     Barrel barrel = (Barrel) clickedBlock.getState();
                     chestInventory = barrel.getInventory();
-                }else if(clickedBlock.getState() instanceof ShulkerBox){
+                } else if (clickedBlock.getState() instanceof ShulkerBox) {
                     ShulkerBox shulkerBox = (ShulkerBox) clickedBlock.getState();
                     chestInventory = shulkerBox.getInventory();
                 }
@@ -75,23 +76,20 @@ public class PlayerInteract implements Listener {
                                 Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "level"));
                                 String lockCode = NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "keyCode");
                                 if (InventoryChecker.hasCorrectKey(player, lockCode)) {
-                                    player.sendMessage(ChatColor.GOLD + "Você abre o bau");
+                                    messageSender.sendPlayerMessage(player, "&8 Você abre o baú");
                                 } else {
                                     event.setCancelled(true);
 
                                     if (InventoryChecker.hasLockPick(player)) {
                                         chestlist.setLastClickedChest(player.getUniqueId(), clickedBlock);
                                         LockPickMinigame minigame = new LockPickMinigame(chestlist);
-                                        if(level != 6){
+                                        if (level != 6) {
                                             minigame.openCustomGUI(player, level);
-                                        }else{
-                                            player.sendMessage("A tranca parece muito poderosa para se fazer lockpick");
+                                        } else {
+                                            messageSender.sendPlayerMessage(player, "&5&l A Tranca parece muito poderosa para se fazer isso", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                                         }
-
-
-
                                     } else {
-                                        player.sendMessage(ChatColor.DARK_RED + "O bau esta trancado");
+                                        messageSender.sendPlayerMessage(player, "&4 O baú esta trancado, você precisa de uma chave para isso");
                                     }
                                 }
                             }
@@ -99,35 +97,34 @@ public class PlayerInteract implements Listener {
 
                     }
                 }
-            } else if (clickedBlock != null && SaveDoor.isDoor(clickedBlock)) {
+            } else if (SaveDoor.isDoor(clickedBlock)) {
                 SaveDoor saveDoor = new SaveDoor();
                 if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     if (clickedBlock.getBlockData() instanceof Door || clickedBlock.getBlockData() instanceof TrapDoor
                             || clickedBlock.getBlockData() instanceof Gate) {
                         Location loc = event.getClickedBlock().getLocation();
                         boolean isLocked = saveDoor.isDoorLocked(loc);
-                        if(clickedBlock.getBlockData() instanceof  Door){
+                        if (clickedBlock.getBlockData() instanceof Door) {
                             Door doorData = (Door) clickedBlock.getBlockData();
 
-                            if ( doorData!= null && doorData.getHalf() == Door.Half.TOP) {
+                            if (doorData != null && doorData.getHalf() == Door.Half.TOP) {
                                 loc = SaveDoor.getBlockBelow(event.getClickedBlock().getLocation());
                                 isLocked = saveDoor.isDoorLocked(loc);
                             }
                         }
 
-                        if(isLocked){
-                            player.sendMessage(ChatColor.RED + "A PORTA ESTA TRANCADA");
+                        if (isLocked) {
                             event.setCancelled(true);
                             String lockCode = saveDoor.getLockCode(loc);
-                            if(InventoryChecker.hasLockPick(player) && !InventoryChecker.hasCorrectKey(player,lockCode)){
+                            if (InventoryChecker.hasLockPick(player) && !InventoryChecker.hasCorrectKey(player, lockCode)) {
                                 Block block = loc.getBlock();
-                                chestlist.setLastClickedChest(player.getUniqueId(),block);
+                                chestlist.setLastClickedChest(player.getUniqueId(), block);
                                 LockPickMinigame minigame = new LockPickMinigame(chestlist);
                                 int level = saveDoor.getLockLevel(loc);
-                                if(level != 6){
+                                if (level != 6) {
                                     minigame.openCustomGUI(player, level);
-                                }else{
-                                    player.sendMessage("A tranca parece muito poderosa para se fazer lockpick");
+                                } else {
+                                    messageSender.sendPlayerMessage(player, "&5&l A Tranca parece muito poderosa para se fazer isso", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                                 }
 
                             }
@@ -136,13 +133,18 @@ public class PlayerInteract implements Listener {
 
                         ItemStack item = player.getInventory().getItemInMainHand();
                         if (item != null && item.getType() != Material.AIR && NameSpacedKeys.isLock(item.getItemMeta())) {
+                            if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanPlaceLand(player)) {
+                                messageSender.sendPlayerMessage(player, "&c Você não tem permissão para colocar uma tranca aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                                return;
+                            }
                             if (saveDoor.isLocationRegistered(loc)) {
-                                player.sendMessage("A PORTA PARECE JA TEM UMA TRANCA");
+                                messageSender.sendPlayerMessage(player, "&4 A porta parece já ter uma tranca", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                             } else {
-                                player.sendMessage("A PORTA NÃO TINHA TRANCA, COLOCANDO...");
+
+                                messageSender.sendPlayerMessage(player, "&fColocado a tranca na porta", Sound.BLOCK_ANVIL_USE, 1.0f, 2.0f);
                                 ItemMeta meta = item.getItemMeta();
                                 String keyCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
-                                if(keyCode != null){
+                                if (keyCode != null) {
                                     Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
                                     saveDoor.saveLocationToFile(loc, false, keyCode, level);
 
@@ -158,56 +160,62 @@ public class PlayerInteract implements Listener {
                                     }
                                 }
                             }
-                        } else if ( item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta())
-                                && saveDoor.isLocationRegistered(loc) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) && saveDoor.isLocationRegistered(loc))){
+                        } else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta())
+                                && saveDoor.isLocationRegistered(loc) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) && saveDoor.isLocationRegistered(loc))) {
                             String lockCode = saveDoor.getLockCode(loc);
-                            String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(),"keyCode");
+                            String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode");
 
-                            if(lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())){
+                            if (lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())) {
                                 if (isLocked) {
-                                    player.sendMessage("DESTRANCANDO PORTA");
+                                    messageSender.sendPlayerMessage(player, "&fDestrancando Porta", Sound.BLOCK_BARREL_OPEN, 1.0f, 2.0f);
                                     saveDoor.setDoorLocked(loc, false);
                                     event.setCancelled(true);
                                 } else {
-                                    player.sendMessage("TRANCANDO PORTA");
+                                    messageSender.sendPlayerMessage(player, "&8Trancando Porta", Sound.BLOCK_BARREL_CLOSE, 1.0f, 2.0f);
                                     saveDoor.setDoorLocked(loc, true);
                                     event.setCancelled(true);
                                 }
                                 player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 1.0f, 0.1f);
                                 player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1.0f, 1.5f);
                             }
-                        }else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isLockRemover(item.getItemMeta())){
-                            if(saveDoor.isLocationRegistered(loc)){
-                                if(!saveDoor.isDoorLocked(loc) || player.isOp() || player.hasPermission("locksrp.admin")){
+                        } else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isLockRemover(item.getItemMeta())) {
+                            if (saveDoor.isLocationRegistered(loc)) {
+                                if (!saveDoor.isDoorLocked(loc) || player.isOp() || player.hasPermission("locksrp.admin")) {
+                                    if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanBreakLand(player)) {
+                                        messageSender.sendPlayerMessage(player, "&c Você não tem permissão para retirar trancas aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                                        return;
+                                    }
                                     ItemManager itemManager = new ItemManager();
                                     String keyCode = saveDoor.getLockCode(loc);
                                     Integer level = saveDoor.getLockLevel(loc);
-                                    ItemStack itemDrop = itemManager.generateLock(level,keyCode);
-                                    saveDoor.dropItemOnGround(loc,itemDrop);
-                                    player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+                                    ItemStack itemDrop = itemManager.generateLock(level, keyCode);
+                                    saveDoor.dropItemOnGround(loc, itemDrop);
                                     saveDoor.removeLocationFromFile(loc);
-                                    player.sendMessage(ChatColor.RED + "Você remove a tranca da porta");
+                                    messageSender.sendPlayerMessage(player, "&4Você removeu a tranca da porta", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
                                     event.setCancelled(true);
                                 }
+                            }
+                        } else {
+                            if (isLocked) {
+                                messageSender.sendPlayerMessage(player, "&4A porta esta trancada", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                             }
                         }
                     }
                 }
-            }else if(clickedBlock != null && clickedBlock.getType() == Material.GRINDSTONE){
+            } else if (clickedBlock != null && clickedBlock.getType() == Material.GRINDSTONE) {
                 ItemStack item = player.getInventory().getItemInMainHand();
-                    if(item != null && item.hasItemMeta()){
-                        if(NameSpacedKeys.isKey(item.getItemMeta())){
-                            event.setCancelled(true);
-                            Integer amount = item.getAmount();
-                            ItemManager items = new ItemManager();
-                            player.getInventory().setItemInMainHand(items.getKeyItem(amount));
-                            player.playSound(player.getLocation(), Sound.BLOCK_GRINDSTONE_USE, 1f, 1f);
-                        }
+                if (item != null && item.hasItemMeta()) {
+                    if (NameSpacedKeys.isKey(item.getItemMeta())) {
+                        event.setCancelled(true);
+                        Integer amount = item.getAmount();
+                        ItemManager items = new ItemManager();
+                        int customModel = item.getItemMeta().getCustomModelData();
+                        player.getInventory().setItemInMainHand(items.getKeyItem(amount, customModel));
+                        messageSender.sendPlayerMessage(player, "&6Você limpa sua chave", Sound.BLOCK_GRINDSTONE_USE);
                     }
+                }
             }
         }
 
     }
-
-
-    }
+}
