@@ -102,12 +102,12 @@ public class LockPickMinigame implements Listener {
 
             Integer level = countItemAmount(event.getInventory(), Material.IRON_INGOT);
             List<Integer> success_hit = numbersSelecionados(level, event.getInventory());
-            System.out.println("success_hit: " + success_hit);
+
 
             // Verifica se o jogador clicou em um slot válido
             if (event.getSlot() >= 9 && event.getSlot() <= 17 && event.getInventory().getItem(event.getSlot()) != null) {
                 Integer order = NameSpacedKeys.getNameSpacedKeyInt(event.getCurrentItem().getItemMeta(), "order");
-                System.out.println("order: " + order);
+
                 if (order == 1 && success_hit.isEmpty()) {
                     Integer slot = event.getSlot();
                     event.getInventory().setItem(slot + 9, event.getCurrentItem());
@@ -228,4 +228,6 @@ public class LockPickMinigame implements Listener {
         }
         return true;
     }
+
+
 }

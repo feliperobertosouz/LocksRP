@@ -10,7 +10,6 @@ import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,108 +20,37 @@ public class DoorInteraction {
     private SaveDoor saveDoor;
     private MessageSender messageSender;
 
-    public DoorInteraction(){
-
-    }
-
     public DoorInteraction(ChestKeeper chestKeeper) {
         this.chestKeeper = chestKeeper;
+        this.messageSender = new MessageSender();
 
     }
 
-    public void handleDoorInteraction(PlayerInteractEvent event){
+    public void handleDoorInteraction(PlayerInteractEvent event) {
+        this.saveDoor = new SaveDoor();
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
         SaveDoor saveDoor = new SaveDoor();
-            if (isValidDoorBlock(clickedBlock)) {
-                Location loc = checkAndHandleTopHalfDoor(clickedBlock);
-                boolean isLocked = saveDoor.isDoorLocked(loc);
-//                if (clickedBlock.getBlockData() instanceof Door) {
-//                    Door doorData = (Door) clickedBlock.getBlockData();
-//
-//                    if (doorData != null && doorData.getHalf() == Door.Half.TOP) {
-//                        loc = SaveDoor.getBlockBelow(event.getClickedBlock().getLocation());
-//                        isLocked = saveDoor.isDoorLocked(loc);
-//                    }
-//                }
-                if (isLocked) {
-                    event.setCancelled(true);
-                    String lockCode = saveDoor.getLockCode(loc);
-                    if (InventoryChecker.hasLockPick(player) && !InventoryChecker.hasCorrectKey(player, lockCode)) {
-                        handleLockPick(player,loc);
-                    }
-                }
-                // Faça o que for necessário com a informação se a porta está trancada ou não
-                ItemStack item = player.getInventory().getItemInMainHand();
-                if (item != null && item.getType() != Material.AIR && NameSpacedKeys.isLock(item.getItemMeta())) {
-                    if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanPlaceLand(player)) {
-                        messageSender.sendPlayerMessage(player, "&c Você não tem permissão para colocar uma tranca aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
-                        return;
-                    }
-                    if (saveDoor.isLocationRegistered(loc)) {
-                        messageSender.sendPlayerMessage(player, "&4 A porta parece já ter uma tranca", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-                    } else {
-                        messageSender.sendPlayerMessage(player, "&fColocado a tranca na porta", Sound.BLOCK_ANVIL_USE, 1.0f, 2.0f);
-                        ItemMeta meta = item.getItemMeta();
-                        String keyCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
-                        if (keyCode != null) {
-                            Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
-                            saveDoor.saveLocationToFile(loc, false, keyCode, level);
-
-                            // Diminui a quantidade do item em 1
-                            item.setAmount(item.getAmount() - 1);
-
-                            if (item.getAmount() <= 0) {
-                                // Se a quantidade for menor ou igual a 0, remove o item da mão do jogador
-                                player.getInventory().setItemInMainHand(null);
-                            } else {
-                                // Atualiza o item na mão do jogador
-                                player.getInventory().setItemInMainHand(item);
-                            }
-                        }
-                    }
-                } else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta())
-                        && saveDoor.isLocationRegistered(loc) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) && saveDoor.isLocationRegistered(loc))) {
-                    String lockCode = saveDoor.getLockCode(loc);
-                    String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode");
-
-                    if (lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())) {
-                        if (isLocked) {
-                            messageSender.sendPlayerMessage(player, "&fDestrancando Porta", Sound.BLOCK_BARREL_OPEN, 1.0f, 2.0f);
-                            saveDoor.setDoorLocked(loc, false);
-                            event.setCancelled(true);
-                        } else {
-                            messageSender.sendPlayerMessage(player, "&8Trancando Porta", Sound.BLOCK_BARREL_CLOSE, 1.0f, 2.0f);
-                            saveDoor.setDoorLocked(loc, true);
-                            event.setCancelled(true);
-                        }
-                        player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 1.0f, 0.1f);
-                        player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1.0f, 1.5f);
-                    }
-                } else if (item != null && item.getType() != Material.AIR && item.hasItemMeta() && NameSpacedKeys.isLockRemover(item.getItemMeta())) {
-                    if (saveDoor.isLocationRegistered(loc)) {
-                        if (!saveDoor.isDoorLocked(loc) || player.isOp() || player.hasPermission("locksrp.admin")) {
-                            if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanBreakLand(player)) {
-                                messageSender.sendPlayerMessage(player, "&c Você não tem permissão para retirar trancas aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
-                                return;
-                            }
-                            ItemManager itemManager = new ItemManager();
-                            String keyCode = saveDoor.getLockCode(loc);
-                            Integer level = saveDoor.getLockLevel(loc);
-                            ItemStack itemDrop = itemManager.generateLock(level, keyCode);
-                            saveDoor.dropItemOnGround(loc, itemDrop);
-                            saveDoor.removeLocationFromFile(loc);
-                            messageSender.sendPlayerMessage(player, "&4Você removeu a tranca da porta", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
-                            event.setCancelled(true);
-                        }
-                    }
-                } else {
-                    if (isLocked) {
-                        messageSender.sendPlayerMessage(player, "&4A porta esta trancada", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+        assert clickedBlock != null;
+        if (isValidDoorBlock(clickedBlock)) {
+            Location loc = checkAndHandleTopHalfDoor(clickedBlock);
+            boolean isLocked = saveDoor.isDoorLocked(loc);
+            if (isLocked) {
+                handleLockedDoorInteraction(event, loc);
+            }
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if (item.hasItemMeta()) {
+                if (NameSpacedKeys.isLock(item.getItemMeta())) {
+                    handleLockInteraction(event, loc);
+                }else if(saveDoor.isLocationRegistered(loc)){
+                    if (NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta()) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) )){
+                        handleKeyInteraction(event, loc, item);
+                    }else if(NameSpacedKeys.isLockRemover(item.getItemMeta())){
+                        handleLockRemoverInteraction(event, loc);
                     }
                 }
             }
-
+        }
     }
 
     private boolean isValidDoorBlock(Block block) {
@@ -144,6 +72,100 @@ public class DoorInteraction {
         }
         return loc;
     }
+
+    private void handleLockInteraction(PlayerInteractEvent event, Location loc){
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanPlaceLand(player)) {
+            messageSender.sendPlayerMessage(player, "&c Você não tem permissão para colocar uma tranca aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+            event.setCancelled(true);
+        } else {
+            if (saveDoor.isLocationRegistered(loc)) {
+                messageSender.sendPlayerMessage(player, "&4 A porta parece já tem uma tranca, você deve tirar ela primeiro", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+            } else {
+                ItemMeta meta = item.getItemMeta();
+                String keyCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
+                if (keyCode != null) {
+                   installLock(player, loc, item, meta, keyCode);
+                }else {
+                    messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma chave a sua tranca antes de tentar colocar ela em uma porta", Sound.ENTITY_VILLAGER_TRADE, 1.0f, 2.0f);
+                }
+            }
+        }
+
+    }
+
+    private void handleLockedDoorInteraction(PlayerInteractEvent event, Location loc){
+        Player player = event.getPlayer();
+
+        String lockCode = saveDoor.getLockCode(loc);
+        if (InventoryChecker.hasLockPick(player) && !InventoryChecker.hasCorrectKey(player, lockCode)) {
+            handleLockPick(player, loc);
+            event.setCancelled(true);
+        } else if (InventoryChecker.hasCorrectKey(player, lockCode) || InventoryChecker.hasUniversalKey(player)) {
+            messageSender.sendPlayerMessage(player, "&fVocê tem a chave.", Sound.ENTITY_VILLAGER_TRADE, 1.0f, 2.0f);
+        }else{
+            messageSender.sendPlayerMessage(player, "&cA porta está trancada, você não tem a chave dela", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+            event.setCancelled(true);
+        }
+
+    }
+    private void handleKeyInteraction(PlayerInteractEvent event, Location loc, ItemStack item){
+        Player player = event.getPlayer();
+        String lockCode = saveDoor.getLockCode(loc);
+        boolean isLocked = saveDoor.isDoorLocked(loc);
+        String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode");
+
+        if (lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())) {
+            if (isLocked) {
+                messageSender.sendPlayerMessage(player, "&fDestrancando Porta", Sound.BLOCK_BARREL_OPEN, 1.0f, 2.0f);
+                saveDoor.setDoorLocked(loc, false);
+                event.setCancelled(true);
+            } else {
+                messageSender.sendPlayerMessage(player, "&8Trancando Porta", Sound.BLOCK_BARREL_CLOSE, 1.0f, 2.0f);
+                saveDoor.setDoorLocked(loc, true);
+                event.setCancelled(true);
+            }
+            player.playSound(player.getLocation(), Sound.ITEM_SPYGLASS_USE, 1.0f, 0.1f);
+            player.playSound(player.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 1.0f, 1.5f);
+        }
+    }
+
+    private void handleLockRemoverInteraction(PlayerInteractEvent event, Location loc){
+        Player player = event.getPlayer();
+        if (!saveDoor.isDoorLocked(loc) || player.isOp() || player.hasPermission("locksrp.admin")) {
+            if (!player.hasPermission("locksrp.admin") && !LandsChecker.PlayerCanBreakLand(player)) {
+                messageSender.sendPlayerMessage(player, "&c Você não tem permissão para retirar trancas aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                return;
+            }
+            ItemManager itemManager = new ItemManager();
+            String keyCode = saveDoor.getLockCode(loc);
+            Integer level = saveDoor.getLockLevel(loc);
+            ItemStack itemDrop = itemManager.generateLock(level, keyCode);
+            saveDoor.dropItemOnGround(loc, itemDrop);
+            saveDoor.removeLocationFromFile(loc);
+            messageSender.sendPlayerMessage(player, "&4Você removeu a tranca da porta", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+            event.setCancelled(true);
+        }
+    }
+
+    private void installLock(Player player, Location loc, ItemStack item, ItemMeta meta, String keyCode){
+        messageSender.sendPlayerMessage(player, "&fColocado a tranca na porta", Sound.BLOCK_ANVIL_USE, 1.0f, 2.0f);
+        Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
+        saveDoor.saveLocationToFile(loc, false, keyCode, level);
+
+        // Diminui a quantidade do item em 1
+        item.setAmount(item.getAmount() - 1);
+
+        if (item.getAmount() <= 0) {
+            // Se a quantidade for menor ou igual a 0, remove o item da mão do jogador
+            player.getInventory().setItemInMainHand(null);
+        } else {
+            // Atualiza o item na mão do jogador
+            player.getInventory().setItemInMainHand(item);
+        }
+    }
+
 
     private void handleLockPick(Player player,Location loc){
         Block block = loc.getBlock();
