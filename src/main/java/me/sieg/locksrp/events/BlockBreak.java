@@ -1,12 +1,11 @@
 package me.sieg.locksrp.events;
-
-import me.sieg.locksrp.utils.Itemmanager;
-import me.sieg.locksrp.utils.SaveDoor;
+import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
+import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,49 +15,73 @@ import org.bukkit.inventory.ItemStack;
 
 public class BlockBreak implements Listener {
 
-    public BlockBreak(){
+    public BlockBreak() {
     }
+
+    MessageSender sender = new MessageSender();
+    ItemManager itemManager = new ItemManager();
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event) {
         Block block = event.getBlock();
         Player player = event.getPlayer();
-        // check if the clicked block is a door
-        if (SaveDoor.isDoor(block)) {
-            SaveDoor saveDoor = new SaveDoor();
+        SaveDoor saveDoor = new SaveDoor();
+        if ( block != null && SaveDoor.isDoor(block)) {
             Location loc = event.getBlock().getLocation();
-            //check if the door is registered
-            if(saveDoor.isLocationRegistered(loc)){
-                //Checa se a porta esta trancada e o player não tem permissão
-                //Check if the door is locked or the player has permission
-                if(saveDoor.isDoorLocked(loc) && !player.hasPermission("locksrp.admin")){
+            if(event.getBlock().getBlockData() instanceof Door){
+                Door doorDataDois = (Door) block.getBlockData();
+                if(doorDataDois.getHalf() == Bisected.Half.TOP){
+                    loc = SaveDoor.getBlockBelow(block.getLocation());
+                }
+            }
+            if (saveDoor.isLocationRegistered(loc)) {
+                boolean  dorLocked = saveDoor.isDoorLocked(loc);
+                if (dorLocked) {
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "A porta esta trancada, destranque antes de tirar");
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-                }else if(!saveDoor.isDoorLocked(loc) || player.hasPermission("locksrp.admin")){
-                    if(block instanceof Door){
-                        Door doorData = (Door) block.getBlockData();
-                        // Verifica se é a parte de cima da porta
-                        //check if clicked block is the top of door
-                        if (doorData.getHalf() == Door.Half.TOP) {
-                            //get bottom door
-                            loc = SaveDoor.getBlockBelow(block.getLocation());
+                    sender.sendPlayerMessage(player, "&cA porta esta trancada, destranque antes de tentar tirar a tranca", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                } else {
+                    //System.out.println("PORTA DESTRANCADA");
+                    if(LandsChecker.PlayerCanBreakLand(player)) {
+                        //System.out.println("PODE RETIRAR A TRANCA");
 
-                        }
-                        // Remove the locatio of doors.yml
-
+                        String keyCode = saveDoor.getLockCode(loc);
+                        Integer level = saveDoor.getLockLevel(loc);
+                        ItemStack itemDrop = itemManager.generateLock(level, keyCode);
+                        saveDoor.dropItemOnGround(loc, itemDrop);
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
+                        sender.sendPlayerMessage(player, "Voce quebrou a porta que estava com uma tranca", Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
+                        saveDoor.removeLocationFromFile(loc);
+                    }else{
+                        //System.out.println("NÃO PODE RETIRAR A TRANCA");
+                        sender.sendPlayerMessage(player,"&cVocê não pode quebrar a porta com tranca, use um lockremover", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                        event.setCancelled(true);
                     }
-                    Itemmanager itemManager = new Itemmanager();
-                    String keyCode = saveDoor.getLockCode(loc);
-                    Integer level = saveDoor.getLockLevel(loc);
-                    ItemStack itemDrop = itemManager.generateLock(level,keyCode);
-                    saveDoor.dropItemOnGround(loc,itemDrop);
-                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
-                    saveDoor.removeLocationFromFile(loc);
                 }
             }
 
+        } else if (block.getType() == Material.CHEST  || block.getType() == Material.BARREL) {
+            Inventory chestInventory = player.getInventory();
+            if (block.getType() == Material.CHEST) {
+                Chest chest = (Chest) block.getState();
+                chestInventory = chest.getInventory();
+            } else if (block.getType() == Material.BARREL) {
+                Barrel barrel = (Barrel) block.getState();
+                chestInventory = barrel.getInventory();
+            }
+
+
+            if (!InventoryChecker.hasUniversalKey(player)) {
+                ItemStack firstItem = chestInventory.getItem(0);
+
+                if (firstItem != null) {
+                    // Envia o item para o jogador
+                    if (firstItem.hasItemMeta() && NameSpacedKeys.isLock(firstItem.getItemMeta())) {
+                        if (NameSpacedKeys.hasKeyCode(firstItem.getItemMeta())) {
+                            event.setCancelled(true);
+                            sender.sendPlayerMessage(player, "&4Tire a tranca do bau para o quebrar primeiro", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
+                        }
+                    }
+                }
+            }
         }
     }
-
-
 }

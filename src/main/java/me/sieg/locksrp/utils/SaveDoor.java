@@ -149,6 +149,9 @@ public class SaveDoor {
                 Material.SPRUCE_DOOR,
                 Material.CRIMSON_DOOR,
                 Material.WARPED_DOOR,
+                Material.MANGROVE_DOOR,
+                Material.CHERRY_DOOR,
+                Material.BAMBOO_DOOR,
                 // Trapdoors
                 Material.ACACIA_TRAPDOOR,
                 Material.BIRCH_TRAPDOOR,
@@ -159,6 +162,9 @@ public class SaveDoor {
                 Material.SPRUCE_TRAPDOOR,
                 Material.CRIMSON_TRAPDOOR,
                 Material.WARPED_TRAPDOOR,
+                Material.MANGROVE_TRAPDOOR,
+                Material.CHERRY_TRAPDOOR,
+                Material.BAMBOO_TRAPDOOR,
                 // Fences
                 Material.ACACIA_FENCE_GATE,
                 Material.BIRCH_FENCE_GATE,
@@ -167,7 +173,10 @@ public class SaveDoor {
                 Material.OAK_FENCE_GATE,
                 Material.SPRUCE_FENCE_GATE,
                 Material.CRIMSON_FENCE_GATE,
-                Material.WARPED_FENCE_GATE
+                Material.WARPED_FENCE_GATE,
+                Material.MANGROVE_FENCE_GATE,
+                Material.CHERRY_FENCE_GATE,
+                Material.BAMBOO_FENCE_GATE,
         };
 
         for (Material doorType : doorTypes) {

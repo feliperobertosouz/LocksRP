@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Itemmanager {
+public class ItemManager {
 
     //Itemmanager class is responsible to create the item stacks of plugin
     protected int customModelDataKey = 9999;
+
+    protected int customModelDataUniversalKey = 9998;
 
     protected int customModelDataLockPick = 9940;
 
@@ -27,6 +29,30 @@ public class Itemmanager {
 
         meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
         meta.setCustomModelData(this.customModelDataKey);
+        chave.setItemMeta(meta);
+        return chave;
+    }
+
+    public ItemStack getKeyItem(int amount, int customModel){
+        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
+        ItemMeta meta = chave.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "Key");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
+        meta.setCustomModelData(customModel);
+        chave.setItemMeta(meta);
+        return chave;
+    }
+
+    public ItemStack getUniversalKey(){
+        ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
+        ItemMeta meta = chave.getItemMeta();
+
+        meta.setDisplayName(ChatColor.WHITE + "Universal Key");
+
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"isUniversalKey","true");
+        meta.setCustomModelData(this.customModelDataUniversalKey);
         chave.setItemMeta(meta);
         return chave;
     }
@@ -61,6 +87,22 @@ public class Itemmanager {
         return chave;
 
     }
+
+    public ItemStack generateKey(ItemStack item, String code){
+        ItemStack chave = item;
+
+        ItemMeta meta = chave.getItemMeta();
+
+        NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
+        chave.setItemMeta(meta);
+        return chave;
+
+    }
+
+
+
+
     public ItemStack generateLock(int level, String code){
         int customModel = 9999;
         if(level == 1){
@@ -73,6 +115,8 @@ public class Itemmanager {
             customModel = 9996;
         }else if(level == 5){
             customModel = 9995;
+        }else if(level == 6){
+            customModel = 9994;
         }
 
         ItemStack tranca = new ItemStack((Material.FLINT));

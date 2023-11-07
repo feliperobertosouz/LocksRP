@@ -1,17 +1,14 @@
 package me.sieg.locksrp.events;
 
-import me.sieg.locksrp.Main;
-import me.sieg.locksrp.utils.Itemmanager;
+import me.sieg.locksrp.utils.ItemManager;
+import me.sieg.locksrp.utils.MessageSender;
 import me.sieg.locksrp.utils.NameSpacedKeys;
-import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -20,6 +17,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class InventoryClick implements Listener {
+
+    ItemManager itemManager = new ItemManager();
+    MessageSender messageSender = new MessageSender();
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -39,11 +40,11 @@ public class InventoryClick implements Listener {
                                 && event.getClickedInventory().getType() == InventoryType.PLAYER) {
 
                             if (NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "keyCode") == null) {
-                                ItemMeta clickMeta = clickedItem.getItemMeta();
-                                clickMeta = NameSpacedKeys.setNameSpacedKey(clickMeta, "keyCode", keyCode);
-                                clickMeta.setLore(Collections.singletonList(ChatColor.WHITE + "Key:" + ChatColor.DARK_PURPLE + keyCode));
-                                clickedItem.setItemMeta(clickMeta);
-
+                               // ItemMeta clickMeta = clickedItem.getItemMeta();
+                               // clickMeta = NameSpacedKeys.setNameSpacedKey(clickMeta, "keyCode", keyCode);
+                                //clickMeta.setLore(Collections.singletonList(ChatColor.WHITE + "Key:" + ChatColor.DARK_PURPLE + keyCode));
+                                //clickedItem.setItemMeta(clickMeta);
+                                clickedItem = itemManager.generateKey(clickedItem, keyCode);
                                 if (player.getGameMode() != GameMode.CREATIVE) {
                                     event.setCancelled(true);
                                     player.getInventory().setItem(event.getSlot(), clickedItem);
@@ -63,18 +64,10 @@ public class InventoryClick implements Listener {
 
                                     ItemMeta clickMeta = clickedItem.getItemMeta();
                                     clickMeta = NameSpacedKeys.setNameSpacedKey(clickMeta, "keyCode", keyCode);
-                                    if (clickMeta.hasLore()) {
-                                        List<String> lore;
-                                        List<String> newlore = new ArrayList<>();
-                                        lore = clickMeta.getLore();
-                                        newlore.add(lore.get(0));
-                                        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + keyCode);
-                                        clickMeta.setLore(newlore);
-                                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-                                        player.sendMessage(ChatColor.GOLD + "Você forja uma nova tranca");
-                                    }
-                                    clickedItem.setItemMeta(clickMeta);
 
+                                    int level = Integer.parseInt(NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "level"));
+                                    messageSender.sendPlayerMessage(player, "&6Você forja uma nova tranca", Sound.BLOCK_ANVIL_USE);
+                                    clickedItem = itemManager.generateLock(level,keyCode);
                                     if (player.getGameMode() != GameMode.CREATIVE) {
                                         event.setCancelled(true);
                                         player.getInventory().setItem(event.getSlot(), clickedItem);
