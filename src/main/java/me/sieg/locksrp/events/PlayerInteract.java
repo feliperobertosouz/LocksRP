@@ -1,4 +1,5 @@
 package me.sieg.locksrp.events;
+import me.sieg.locksrp.interactions.DoorInteraction;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
@@ -42,7 +43,8 @@ public class PlayerInteract implements Listener {
             } else if (clickedBlock.getType() == Material.CHEST || clickedBlock.getType() == Material.BARREL || clickedBlock.getState() instanceof ShulkerBox) {
                 handleContainerInteraction(event);
             } else if (SaveDoor.isDoor(clickedBlock)) {
-                handleDoorInteraction(event);
+                DoorInteraction doorInteraction = new DoorInteraction(chestlist);
+                doorInteraction.handleDoorInteraction(event);
             } else if (clickedBlock != null && clickedBlock.getType() == Material.GRINDSTONE) {
                 handleGrindStoneInteraction(event);
             }
@@ -129,7 +131,7 @@ public class PlayerInteract implements Listener {
     }
 
 
-    public void handleDoorInteraction(PlayerInteractEvent event){
+    public void OldhandleDoorInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
         SaveDoor saveDoor = new SaveDoor();
