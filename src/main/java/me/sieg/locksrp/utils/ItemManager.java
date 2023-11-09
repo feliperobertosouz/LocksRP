@@ -138,6 +138,42 @@ public class ItemManager {
         return tranca;
     }
 
+    public ItemStack generateLock(int level, String code, int amount){
+        int customModel = 9999;
+        if(level == 1){
+            customModel = 9999;
+        }else if(level == 2){
+            customModel = 9998;
+        }else if(level == 3){
+            customModel = 9997;
+        }else if(level == 4){
+            customModel = 9996;
+        }else if(level == 5){
+            customModel = 9995;
+        }else if(level == 6){
+            customModel = 9994;
+        }
+
+        ItemStack tranca = new ItemStack((Material.FLINT));
+        tranca.setAmount(amount);
+        ItemMeta meta = tranca.getItemMeta();
+
+        meta.setDisplayName(ChatColor.GOLD + "lock");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
+        meta = NameSpacedKeys.setNameSpacedKey(meta,"keyCode", code);
+
+        List<String> newlore = new ArrayList<>();
+        newlore.add(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level);
+        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + code);
+        meta.setLore(newlore);
+        meta.setCustomModelData(customModel);
+
+        tranca.setItemMeta(meta);
+        return tranca;
+    }
+
     public ItemStack getLockPick(){
         ItemStack lockpick = new ItemStack((Material.STICK));
 

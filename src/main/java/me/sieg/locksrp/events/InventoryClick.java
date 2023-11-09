@@ -67,7 +67,8 @@ public class InventoryClick implements Listener {
 
                                     int level = Integer.parseInt(NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "level"));
                                     messageSender.sendPlayerMessage(player, "&6Você forja uma nova tranca", Sound.BLOCK_ANVIL_USE);
-                                    clickedItem = itemManager.generateLock(level,keyCode);
+                                    int amount = clickedItem.getAmount();
+                                    clickedItem = itemManager.generateLock(level,keyCode, amount);
                                     if (player.getGameMode() != GameMode.CREATIVE) {
                                         event.setCancelled(true);
                                         player.getInventory().setItem(event.getSlot(), clickedItem);
