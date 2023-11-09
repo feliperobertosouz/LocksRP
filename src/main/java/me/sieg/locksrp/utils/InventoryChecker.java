@@ -1,6 +1,8 @@
 package me.sieg.locksrp.utils;
 
 import me.sieg.locksrp.Main;
+import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.KeyFactory;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -15,7 +17,7 @@ public class InventoryChecker {
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && item.hasItemMeta()) {
                 ItemMeta meta = item.getItemMeta();
-                if(NameSpacedKeys.isKey(meta)){
+                if(ItemManager.isKey(meta)){
                     NamespacedKey key = new NamespacedKey(Main.getPlugin(), "keyCode");
 
                     if (meta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
@@ -35,7 +37,7 @@ public class InventoryChecker {
         for(ItemStack item : player.getInventory().getContents()){
             if(item != null && item.hasItemMeta()){
                 ItemMeta meta = item.getItemMeta();
-                if(NameSpacedKeys.isLockPick(meta)){
+                if(ItemManager.isLockPick(meta)){
                     return true;
                 }
             }
@@ -47,7 +49,7 @@ public class InventoryChecker {
         for(ItemStack item : player.getInventory().getContents()){
             if(item != null && item.hasItemMeta()){
                 ItemMeta meta = item.getItemMeta();
-                if(NameSpacedKeys.isUniversalKey(meta)){
+                if(ItemManager.isUniversalKey(meta)){
                     return true;
                 }
             }
@@ -64,7 +66,7 @@ public class InventoryChecker {
         for (int i = 0; i < contents.length; i++) {
             ItemStack item = contents[i];
             if (item != null && item.getType() == Material.STICK) {
-                if (NameSpacedKeys.isLockPick(item.getItemMeta())) {
+                if (ItemManager.isLockPick(item.getItemMeta())) {
                     int amount = item.getAmount();
                     if (amount > 1) {
                         item.setAmount(amount - 1);

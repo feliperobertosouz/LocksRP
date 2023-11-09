@@ -1,5 +1,6 @@
 package me.sieg.locksrp.commands;
 import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -34,17 +35,17 @@ public class LocksRPCommands implements CommandExecutor {
                         int amount = 1;
                         ItemStack tranca = null;
                         if(locklevel == 1)
-                            tranca = items.getLock(1, 9999, amount);
+                            tranca = LockFactory.createLock(1, amount);
                         else if(locklevel == 2)
-                            tranca = items.getLock(2, 9998, amount);
+                            tranca = LockFactory.createLock(2, amount);
                         else if(locklevel == 3)
-                            tranca = items.getLock(3,9997, amount);
+                            tranca = LockFactory.createLock(3, amount);
                         else if(locklevel == 4)
-                            tranca = items.getLock(4,9996, amount);
+                            tranca = LockFactory.createLock(4, amount);
                         else if(locklevel == 5)
-                            tranca = items.getLock(5,9995, amount);
+                            tranca = LockFactory.createLock(5, amount);
                         else if(locklevel == 6)
-                            tranca = items.getLock(6,99964, amount);
+                            tranca = LockFactory.createLock(6, amount);
                         else{
                             sender.sendMessage(ChatColor.RED + "Informe um nivel de 1 a 6");
                             return false;
@@ -82,7 +83,7 @@ public class LocksRPCommands implements CommandExecutor {
                     ItemStack itemHand = player.getInventory().getItemInMainHand();
                     if(itemHand != null && itemHand.hasItemMeta()){
                         ItemMeta meta = itemHand.getItemMeta();
-                        if(NameSpacedKeys.isLock(meta) && NameSpacedKeys.hasKeyCode(meta)){
+                        if(ItemManager.isLock(meta) && ItemManager.hasKeyCode(meta)){
                             String lockCode = NameSpacedKeys.getNameSpacedKey(meta,"keyCode");
                             ItemStack chave = items.generateKey(lockCode);
                             player.getInventory().addItem(chave);

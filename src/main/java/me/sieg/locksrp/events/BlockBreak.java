@@ -1,5 +1,6 @@
 package me.sieg.locksrp.events;
 import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
@@ -75,8 +76,8 @@ public class BlockBreak implements Listener {
 
                 if (firstItem != null) {
                     // Envia o item para o jogador
-                    if (firstItem.hasItemMeta() && NameSpacedKeys.isLock(firstItem.getItemMeta())) {
-                        if (NameSpacedKeys.hasKeyCode(firstItem.getItemMeta())) {
+                    if (firstItem.hasItemMeta() && ItemManager.isLock(firstItem.getItemMeta())) {
+                        if (ItemManager.hasKeyCode(firstItem.getItemMeta())) {
                             event.setCancelled(true);
                             sender.sendPlayerMessage(player, "&4Tire a tranca do bau para o quebrar primeiro", Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                         }

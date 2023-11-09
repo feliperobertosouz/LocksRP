@@ -27,159 +27,120 @@ public class ItemManager {
         return false;
     }
 
+    public static String getKeyCode(ItemMeta meta){
+        if(ItemManager.isLock(meta)){
+            String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
+            return lockCode;
+        }
+
+        return null;
+    }
+
+    public static String getKeyCode(ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+
+        if(meta != null && ItemManager.isLock(meta)){
+            String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
+            return lockCode;
+        }
+
+        return null;
+    }
+
+    public static  Boolean isLock(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+    public static Boolean isKey(ItemMeta meta){
+        if(
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
+                        PersistentDataType.STRING) ||
+                        meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
+                                PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+    public static  Boolean isUniversalKey(ItemMeta meta){
+
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isUniversalKey"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isUniversalKey"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+    public static  Boolean isLockPick(ItemMeta meta){
+
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLockPick"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLockPick"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+    public static Boolean isLockRemover(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLockRemover"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLockRemover"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
     public ItemStack getKeyItem(int amount){
-        //ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
         ItemStack chave = KeyFactory.createKey(amount);
-//        ItemMeta meta = chave.getItemMeta();
-//
-//        meta.setDisplayName(ChatColor.WHITE + "Key");
-//
-//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
-//        meta.setCustomModelData(this.customModelDataKey);
-//        chave.setItemMeta(meta);
         return chave;
     }
 
     public ItemStack getKeyItem(int amount, int customModel){
         ItemStack chave = KeyFactory.createKey(amount, customModel);
-//        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
-//        ItemMeta meta = chave.getItemMeta();
-//
-//        meta.setDisplayName(ChatColor.WHITE + "Key");
-//
-//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
-//        meta.setCustomModelData(customModel);
-//        chave.setItemMeta(meta);
         return chave;
     }
 
     public ItemStack getUniversalKey(){
         ItemStack chave = KeyFactory.createUniversalKey();
-//        ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
-//        ItemMeta meta = chave.getItemMeta();
-//
-//        meta.setDisplayName(ChatColor.WHITE + "Universal Key");
-//
-//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isUniversalKey","true");
-//        meta.setCustomModelData(this.customModelDataUniversalKey);
-//        chave.setItemMeta(meta);
         return chave;
     }
 
     public ItemStack getLock(int level,int customModel, int amount){
-
-        ItemStack tranca = new ItemStack((Material.FLINT), amount);
-        ItemMeta meta = tranca.getItemMeta();
-
-        meta.setDisplayName(ChatColor.GOLD + "Lock");
-
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
-
-        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level));
-
-        meta.setCustomModelData(customModel);
-        tranca.setItemMeta(meta);
+        ItemStack tranca = LockFactory.createLock(level, customModel, amount);
 
         return tranca;
     }
 
     public ItemStack generateKey(String code){
-        ItemStack chave = getKeyItem(1);
-
-        ItemMeta meta = chave.getItemMeta();
-
-        NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
-        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
-        chave.setItemMeta(meta);
+        ItemStack chave = KeyFactory.generateKey(code);
         return chave;
 
     }
 
     public ItemStack generateKey(ItemStack item, String code){
-        ItemStack chave = item;
-
-        ItemMeta meta = chave.getItemMeta();
-
-        NameSpacedKeys.setNameSpacedKey(meta,"keyCode",code);
-        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
-        chave.setItemMeta(meta);
+        ItemStack chave = KeyFactory.generateKey(item, code);
         return chave;
 
     }
 
 
-
-
     public ItemStack generateLock(int level, String code){
-        int customModel = 9999;
-        if(level == 1){
-            customModel = 9999;
-        }else if(level == 2){
-            customModel = 9998;
-        }else if(level == 3){
-            customModel = 9997;
-        }else if(level == 4){
-            customModel = 9996;
-        }else if(level == 5){
-            customModel = 9995;
-        }else if(level == 6){
-            customModel = 9994;
-        }
-
-        ItemStack tranca = new ItemStack((Material.FLINT));
-        ItemMeta meta = tranca.getItemMeta();
-
-        meta.setDisplayName(ChatColor.GOLD + "lock");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
-        meta = NameSpacedKeys.setNameSpacedKey(meta,"keyCode", code);
-
-        List<String> newlore = new ArrayList<>();
-        newlore.add(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level);
-        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + code);
-        meta.setLore(newlore);
-        meta.setCustomModelData(customModel);
-
-        tranca.setItemMeta(meta);
+        ItemStack tranca = LockFactory.generateLock(level, code);
         return tranca;
     }
 
     public ItemStack generateLock(int level, String code, int amount){
-        int customModel = 9999;
-        if(level == 1){
-            customModel = 9999;
-        }else if(level == 2){
-            customModel = 9998;
-        }else if(level == 3){
-            customModel = 9997;
-        }else if(level == 4){
-            customModel = 9996;
-        }else if(level == 5){
-            customModel = 9995;
-        }else if(level == 6){
-            customModel = 9994;
-        }
-
-        ItemStack tranca = new ItemStack((Material.FLINT));
-        tranca.setAmount(amount);
-        ItemMeta meta = tranca.getItemMeta();
-
-        meta.setDisplayName(ChatColor.GOLD + "lock");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
-        meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
-        meta = NameSpacedKeys.setNameSpacedKey(meta,"keyCode", code);
-
-        List<String> newlore = new ArrayList<>();
-        newlore.add(ChatColor.WHITE + "Level: " + ChatColor.GOLD + level);
-        newlore.add(ChatColor.WHITE + "code:" + ChatColor.DARK_PURPLE + code);
-        meta.setLore(newlore);
-        meta.setCustomModelData(customModel);
-
-        tranca.setItemMeta(meta);
+        ItemStack tranca = LockFactory.generateLock(level, code, amount);
         return tranca;
     }
 

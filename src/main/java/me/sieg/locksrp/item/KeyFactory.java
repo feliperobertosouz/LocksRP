@@ -1,16 +1,21 @@
 package me.sieg.locksrp.item;
 
+import me.sieg.locksrp.Main;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collections;
 
 public class KeyFactory {
-    private static final int DEFAULT_CUSTOM_MODEL_DATA = 9999;; // Substitua pelo valor desejado
-    private static final int UNIVERSALKEY_CUSTOM_MODEL_DATA = 9998; // Substitua pelo valor desejado
+    private static final int DEFAULT_CUSTOM_MODEL_DATA = 9999;;
+
+    private static final int UNIVERSALKEY_CUSTOM_MODEL_DATA = 9998;
+
     public static ItemStack createKey(int amount) {
         return createKey(amount, DEFAULT_CUSTOM_MODEL_DATA);
     }

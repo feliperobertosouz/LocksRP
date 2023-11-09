@@ -2,6 +2,7 @@ package me.sieg.locksrp.interactions;
 
 import me.sieg.locksrp.events.LockPickMinigame;
 import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.KeyFactory;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -40,12 +41,12 @@ public class DoorInteraction {
             }
             ItemStack item = player.getInventory().getItemInMainHand();
             if (item.hasItemMeta()) {
-                if (NameSpacedKeys.isLock(item.getItemMeta())) {
+                if (ItemManager.isLock(item.getItemMeta())) {
                     handleLockInteraction(event, loc);
                 }else if(saveDoor.isLocationRegistered(loc)){
-                    if (NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.hasKeyCode(item.getItemMeta()) || (item.hasItemMeta() && NameSpacedKeys.isUniversalKey(item.getItemMeta()) )){
+                    if (ItemManager.isKey(item.getItemMeta()) && ItemManager.hasKeyCode(item.getItemMeta()) || (item.hasItemMeta() && ItemManager.isUniversalKey(item.getItemMeta()) )){
                         handleKeyInteraction(event, loc, item);
-                    }else if(NameSpacedKeys.isLockRemover(item.getItemMeta())){
+                    }else if(ItemManager.isLockRemover(item.getItemMeta())){
                         handleLockRemoverInteraction(event, loc);
                     }
                 }
@@ -116,7 +117,7 @@ public class DoorInteraction {
         boolean isLocked = saveDoor.isDoorLocked(loc);
         String keyCode = NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode");
 
-        if (lockCode.equals(keyCode) || NameSpacedKeys.isUniversalKey(item.getItemMeta())) {
+        if (lockCode.equals(keyCode) || ItemManager.isUniversalKey(item.getItemMeta())) {
             if (isLocked) {
                 messageSender.sendPlayerMessage(player, "&fDestrancando Porta", Sound.BLOCK_BARREL_OPEN, 1.0f, 2.0f);
                 saveDoor.setDoorLocked(loc, false);

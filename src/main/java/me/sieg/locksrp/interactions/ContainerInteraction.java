@@ -1,6 +1,8 @@
 package me.sieg.locksrp.interactions;
 
 import me.sieg.locksrp.events.LockPickMinigame;
+import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -34,15 +36,13 @@ public class ContainerInteraction {
         }
 
         if (!InventoryChecker.hasUniversalKey(player)) {
-            ItemStack firstItem = chestInventory.getItem(0);
+            ItemStack firstItem = containerInventory.getItem(0);
 
             if (firstItem != null) {
-                if (NameSpacedKeys.isLock(firstItem.getItemMeta())) {
-                    if (NameSpacedKeys.hasKeyCode(firstItem.getItemMeta())) {
-                        //Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "level"));
-                        Integer level = NameSpacedKeys.getLockLevel(firstItem.getItemMeta());
-                        //String lockCode = NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "keyCode");
-                        String lockCode = NameSpacedKeys.getLockCode(firstItem.getItemMeta());
+                if (ItemManager.isLock(firstItem.getItemMeta())) {
+                    if (ItemManager.hasKeyCode(firstItem.getItemMeta())) {
+                        Integer level = LockFactory.getLockLevel(firstItem.getItemMeta());
+                        String lockCode = ItemManager.getKeyCode(firstItem.getItemMeta());
                         if (InventoryChecker.hasCorrectKey(player, lockCode)) {
                             messageSender.sendPlayerMessage(player, "&8 Você abre o baú");
                         } else {
