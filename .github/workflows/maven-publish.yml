@@ -1,10 +1,6 @@
 name: Maven Package
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
   release:
     types: [ created ]
     
@@ -27,7 +23,7 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: target/
+        path: target/*.jar
 
     # - name: Publish to GitHub Packages Apache Maven
     #   run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
