@@ -40,7 +40,7 @@ public final class Main extends JavaPlugin {
         } else {
             getLogger().warning("O plugin Lands não foi encontrado. Algumas funcionalidades podem estar desativadas.");
         }
-        logger.info("LOCSKRP INITIALIZED");
+        logger.info("LOCSKRP INITIALIZED SUCCESSFULL");
     }
 
     private boolean isLandsPluginPresent() {
