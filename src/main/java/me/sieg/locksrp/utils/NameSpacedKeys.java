@@ -122,4 +122,42 @@ public class NameSpacedKeys {
         return metaInside;
     }
 
+
+    public static int getLockLevel(ItemMeta meta){
+        if(isLock(meta)){
+            Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
+        }
+        return 0;
+    }
+
+    public static int getLockLevel(ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+
+        if(meta != null && isLock(meta)){
+            Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
+        }
+        return 0;
+    }
+
+    public static String getLockCode(ItemMeta meta){
+        if(isLock(meta)){
+            String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
+        }
+
+        return null;
+    }
+
+    public static String getLockCode(ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+
+        if(meta != null && isLock(meta)){
+            String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
+        }
+
+        return null;
+    }
+
+    public static void setLockCode(ItemStack item, String code){
+
+    }
 }

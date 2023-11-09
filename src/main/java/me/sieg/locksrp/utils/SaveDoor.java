@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
@@ -206,5 +207,12 @@ public class SaveDoor {
             // Define o pickup delay do item para 0, para que possa ser pego imediatamente
             itemEntity.setPickupDelay(0);
         }
+    }
+
+    public static Boolean isValidContainer(Block clickedBlock){
+        if(clickedBlock.getType() == Material.CHEST || clickedBlock.getType() == Material.BARREL || clickedBlock.getState() instanceof ShulkerBox){
+            return true;
+        }
+        return false;
     }
 }
