@@ -229,5 +229,8 @@ public class LockPickMinigame implements Listener {
         return true;
     }
 
+    public Boolean containTrap(Block block){
+        return false;
+    }
 
 }

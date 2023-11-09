@@ -1,4 +1,5 @@
 package me.sieg.locksrp.events;
+import me.sieg.locksrp.interactions.ContainerInteraction;
 import me.sieg.locksrp.interactions.DoorInteraction;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
@@ -40,8 +41,9 @@ public class PlayerInteract implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null) {
             if (clickedBlock.getType() == Material.SMITHING_TABLE) {
                 handleSmithingTableInteraction(event);
-            } else if (clickedBlock.getType() == Material.CHEST || clickedBlock.getType() == Material.BARREL || clickedBlock.getState() instanceof ShulkerBox) {
-                handleContainerInteraction(event);
+            } else if (SaveDoor.isValidContainer(clickedBlock)) {
+                ContainerInteraction containerInteraction = new ContainerInteraction(chestlist);
+                containerInteraction.handleContainerInteraction(event);
             } else if (SaveDoor.isDoor(clickedBlock)) {
                 DoorInteraction doorInteraction = new DoorInteraction(chestlist);
                 doorInteraction.handleDoorInteraction(event);
@@ -90,7 +92,7 @@ public class PlayerInteract implements Listener {
         }
     }
 
-    private void handleContainerInteraction(PlayerInteractEvent event){
+    private void oldhandleContainerInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
         Inventory chestInventory = player.getInventory();
         Block clickedBlock = event.getClickedBlock();
@@ -137,4 +139,6 @@ public class PlayerInteract implements Listener {
             }
         }
     }
+
+
 }
