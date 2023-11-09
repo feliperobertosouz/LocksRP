@@ -1,6 +1,6 @@
 package me.sieg.locksrp.events;
 
-import me.sieg.locksrp.utils.ItemManager;
+import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.utils.MessageSender;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.*;
@@ -11,10 +11,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class InventoryClick implements Listener {
 

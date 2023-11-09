@@ -1,5 +1,5 @@
 package me.sieg.locksrp.commands;
-import me.sieg.locksrp.utils.ItemManager;
+import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

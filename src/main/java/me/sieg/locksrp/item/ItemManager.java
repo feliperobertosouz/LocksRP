@@ -1,9 +1,14 @@
-package me.sieg.locksrp.utils;
+package me.sieg.locksrp.item;
 
+import me.sieg.locksrp.Main;
+import me.sieg.locksrp.item.KeyFactory;
+import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,49 +16,53 @@ import java.util.List;
 
 public class ItemManager {
 
-    //Itemmanager class is responsible to create the item stacks of plugin
-    protected int customModelDataKey = 9999;
-
-    protected int customModelDataUniversalKey = 9998;
-
     protected int customModelDataLockPick = 9940;
 
     protected int customModelDataLockRemover = 9940;
 
+    public static Boolean hasKeyCode(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "keyCode"), PersistentDataType.STRING)){
+            return true;
+        }
+        return false;
+    }
 
     public ItemStack getKeyItem(int amount){
-        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
-        ItemMeta meta = chave.getItemMeta();
-
-        meta.setDisplayName(ChatColor.WHITE + "Key");
-
-        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
-        meta.setCustomModelData(this.customModelDataKey);
-        chave.setItemMeta(meta);
+        //ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
+        ItemStack chave = KeyFactory.createKey(amount);
+//        ItemMeta meta = chave.getItemMeta();
+//
+//        meta.setDisplayName(ChatColor.WHITE + "Key");
+//
+//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
+//        meta.setCustomModelData(this.customModelDataKey);
+//        chave.setItemMeta(meta);
         return chave;
     }
 
     public ItemStack getKeyItem(int amount, int customModel){
-        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
-        ItemMeta meta = chave.getItemMeta();
-
-        meta.setDisplayName(ChatColor.WHITE + "Key");
-
-        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
-        meta.setCustomModelData(customModel);
-        chave.setItemMeta(meta);
+        ItemStack chave = KeyFactory.createKey(amount, customModel);
+//        ItemStack chave = new ItemStack(Material.NAME_TAG, amount);
+//        ItemMeta meta = chave.getItemMeta();
+//
+//        meta.setDisplayName(ChatColor.WHITE + "Key");
+//
+//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isKey","true");
+//        meta.setCustomModelData(customModel);
+//        chave.setItemMeta(meta);
         return chave;
     }
 
     public ItemStack getUniversalKey(){
-        ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
-        ItemMeta meta = chave.getItemMeta();
-
-        meta.setDisplayName(ChatColor.WHITE + "Universal Key");
-
-        meta = NameSpacedKeys.setNameSpacedKey(meta,"isUniversalKey","true");
-        meta.setCustomModelData(this.customModelDataUniversalKey);
-        chave.setItemMeta(meta);
+        ItemStack chave = KeyFactory.createUniversalKey();
+//        ItemStack chave = new ItemStack(Material.NAME_TAG, 1);
+//        ItemMeta meta = chave.getItemMeta();
+//
+//        meta.setDisplayName(ChatColor.WHITE + "Universal Key");
+//
+//        meta = NameSpacedKeys.setNameSpacedKey(meta,"isUniversalKey","true");
+//        meta.setCustomModelData(this.customModelDataUniversalKey);
+//        chave.setItemMeta(meta);
         return chave;
     }
 

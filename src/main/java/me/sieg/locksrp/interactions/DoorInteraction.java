@@ -1,9 +1,9 @@
 package me.sieg.locksrp.interactions;
 
 import me.sieg.locksrp.events.LockPickMinigame;
+import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Door;

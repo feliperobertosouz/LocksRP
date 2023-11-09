@@ -1,4 +1,5 @@
 package me.sieg.locksrp.events;
+import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
