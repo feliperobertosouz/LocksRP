@@ -100,6 +100,7 @@ public class ItemManager {
         return false;
     }
 
+
     public ItemStack getKeyItem(int amount){
         ItemStack chave = KeyFactory.createKey(amount);
         return chave;
@@ -173,4 +174,31 @@ public class ItemManager {
 
         return lockRemover;
     }
+
+    public ItemStack getAlarmTrap(){
+        ItemStack alarmTrap = TrapFactory.getAlarmTrap();
+        return alarmTrap;
+    }
+
+    public static Boolean isTrap(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isTrap"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isTrap"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+    public static Boolean isAlarmTrap(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isAlarmTrap"),
+                PersistentDataType.STRING) ||
+                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isAlarmTrap"),
+                        PersistentDataType.BYTE)){
+            return true;
+        }
+        return false;
+    }
+
+
 }

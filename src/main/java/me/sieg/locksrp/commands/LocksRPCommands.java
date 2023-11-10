@@ -111,7 +111,12 @@ public class LocksRPCommands implements CommandExecutor {
                     sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma chave universal");
                     ItemStack universalKey = items.getUniversalKey();
                     player.getInventory().addItem(universalKey);
-                }else{
+                }else if(args[0].equalsIgnoreCase("getAlarmTrap")){
+                    sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma armadilha de alarme");
+                    ItemStack alarmTrap = items.getAlarmTrap();
+                    player.getInventory().addItem(alarmTrap);
+                }
+                else{
                     commandAjuda(args, player);
                 }
             }
