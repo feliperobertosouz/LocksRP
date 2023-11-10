@@ -21,7 +21,7 @@ public class LockFactory {
             ItemStack lock = new ItemStack(Material.FLINT);
             ItemMeta meta = lock.getItemMeta();
 
-            meta.setDisplayName(ChatColor.GOLD + "lock");
+            meta.setDisplayName(ChatColor.GOLD + "Lock");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
@@ -43,7 +43,7 @@ public class LockFactory {
             ItemStack lock = new ItemStack(Material.FLINT, amount);
             ItemMeta meta = lock.getItemMeta();
 
-            meta.setDisplayName(ChatColor.GOLD + "lock");
+            meta.setDisplayName(ChatColor.GOLD + "Lock");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "isLock", "true");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "bindable", "true");
             meta = NameSpacedKeys.setNameSpacedKey(meta, "level", String.valueOf(level));
