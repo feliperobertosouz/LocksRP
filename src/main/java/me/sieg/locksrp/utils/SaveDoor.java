@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
@@ -214,5 +215,43 @@ public class SaveDoor {
             return true;
         }
         return false;
+    }
+
+
+    //ADDTRAP
+    public void addTrapToDoor(Location location, String trapName) {
+        String key = locationToString(location);
+
+        // Verifica se a localização já está registrada
+        if (doorsConfig.contains(key)) {
+            ConfigurationSection doorSection = doorsConfig.getConfigurationSection(key);
+
+            // Adiciona o item "trap" ao registro da porta
+            doorSection.set("trap", trapName);
+
+            // Salva as alterações no arquivo
+            saveDoorsConfig();
+        }
+    }
+
+    public void removeTrapFromDoor(Location location) {
+        String key = locationToString(location);
+
+        // Verifica se a localização está registrada
+        if (doorsConfig.contains(key)) {
+            ConfigurationSection doorSection = doorsConfig.getConfigurationSection(key);
+
+            // Remove o item "trap" do registro da porta
+            doorSection.set("trap", null);
+
+            // Salva as alterações no arquivo
+            saveDoorsConfig();
+        }
+    }
+    public boolean hasTrap(Location location) {
+        String key = locationToString(location);
+
+        // Verifica se a localização está registrada e se há uma armadilha associada
+        return doorsConfig.contains(key + ".trap");
     }
 }

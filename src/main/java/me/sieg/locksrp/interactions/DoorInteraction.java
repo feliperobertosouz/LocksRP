@@ -48,6 +48,8 @@ public class DoorInteraction {
                         handleKeyInteraction(event, loc, item);
                     }else if(ItemManager.isLockRemover(item.getItemMeta())){
                         handleLockRemoverInteraction(event, loc);
+                    }else if (ItemManager.isTrap(item.getItemMeta())){
+                        handleTrapInteraction(event, loc);
                     }
                 }
             }
@@ -180,6 +182,19 @@ public class DoorInteraction {
         }
     }
 
+    private void handleTrapInteraction(PlayerInteractEvent event, Location loc){
+        messageSender.sendPlayerMessage(event.getPlayer(), "&cTRAP INTERACTION", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if(saveDoor.hasTrap(loc)){
+            messageSender.sendPlayerMessage(player, "&cA porta já tem uma armadilha", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+            return;
+        }
+        if(ItemManager.isAlarmTrap(item.getItemMeta())){
+            saveDoor.addTrapToDoor(loc, "alarmTrap");
+        }
+
+    }
     //caso o de cima não de certo
     private boolean isValidDoorBlockSaveDoor(Block block){
        return saveDoor.isDoor(block);
