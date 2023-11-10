@@ -1,15 +1,15 @@
 package me.sieg.locksrp.events;
 import me.sieg.locksrp.interactions.ContainerInteraction;
 import me.sieg.locksrp.interactions.DoorInteraction;
+import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.KeyFactory;
+import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.ShulkerBox;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Gate;
-import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,8 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Collections;
 
 public class PlayerInteract implements Listener {
 
@@ -58,14 +56,14 @@ public class PlayerInteract implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item != null && item.hasItemMeta()) {
-            if (NameSpacedKeys.isKey(item.getItemMeta())) {
+            if (ItemManager.isKey(item.getItemMeta())) {
                 event.setCancelled(true);
                 Integer amount = item.getAmount();
                 ItemManager items = new ItemManager();
                 int customModel = item.getItemMeta().getCustomModelData();
                 player.getInventory().setItemInMainHand(items.getKeyItem(amount, customModel));
                 messageSender.sendPlayerMessage(player, "&6Você limpa sua chave", Sound.BLOCK_GRINDSTONE_USE);
-            }else if(NameSpacedKeys.isLock(item.getItemMeta())){
+            }else if(ItemManager.isLock(item.getItemMeta())){
                 event.setCancelled(true);
                 Integer amount = item.getAmount();
                 ItemManager items = new ItemManager();
@@ -81,7 +79,7 @@ public class PlayerInteract implements Listener {
         Player player = event.getPlayer();
         if (player.getInventory().getItemInMainHand() != null && player.getInventory().getItemInMainHand().hasItemMeta()) {
             ItemStack item = player.getInventory().getItemInMainHand();
-            if (NameSpacedKeys.isKey(item.getItemMeta()) && NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode") == null) {
+            if (ItemManager.isKey(item.getItemMeta()) && NameSpacedKeys.getNameSpacedKey(item.getItemMeta(), "keyCode") == null) {
                 event.setCancelled(true);
                 messageSender.sendPlayerMessage(player, "&6 Você forja uma nova chave", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
                 String code = KeyCodeGenerator.generateUniqueCode();
@@ -112,8 +110,8 @@ public class PlayerInteract implements Listener {
             ItemStack firstItem = chestInventory.getItem(0);
 
             if (firstItem != null) {
-                if (NameSpacedKeys.isLock(firstItem.getItemMeta())) {
-                    if (NameSpacedKeys.hasKeyCode(firstItem.getItemMeta())) {
+                if (ItemManager.isLock(firstItem.getItemMeta())) {
+                    if (ItemManager.hasKeyCode(firstItem.getItemMeta())) {
                         Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "level"));
                         String lockCode = NameSpacedKeys.getNameSpacedKey(firstItem.getItemMeta(), "keyCode");
                         if (InventoryChecker.hasCorrectKey(player, lockCode)) {

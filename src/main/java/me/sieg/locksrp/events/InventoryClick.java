@@ -1,6 +1,8 @@
 package me.sieg.locksrp.events;
 
-import me.sieg.locksrp.utils.ItemManager;
+import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.item.KeyFactory;
+import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.utils.MessageSender;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.*;
@@ -11,10 +13,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class InventoryClick implements Listener {
 
@@ -29,14 +27,14 @@ public class InventoryClick implements Listener {
 
         if (cursorItem.hasItemMeta()) {
             ItemMeta metaCursor = cursorItem.getItemMeta();
-            if (NameSpacedKeys.isKey(metaCursor)) {
+            if (ItemManager.isKey(metaCursor)) {
                 String keyCode = NameSpacedKeys.getNameSpacedKey(metaCursor, "keyCode");
 
                 if (keyCode != null) {
                     if (clickedItem != null && clickedItem.hasItemMeta()) {
                         ItemMeta clickedMeta = clickedItem.getItemMeta();
 
-                        if (clickedItem.getType().equals(Material.NAME_TAG) && NameSpacedKeys.isKey(clickedMeta)
+                        if (clickedItem.getType().equals(Material.NAME_TAG) && ItemManager.isKey(clickedMeta)
                                 && event.getClickedInventory().getType() == InventoryType.PLAYER) {
 
                             if (NameSpacedKeys.getNameSpacedKey(clickedItem.getItemMeta(), "keyCode") == null) {
@@ -59,7 +57,7 @@ public class InventoryClick implements Listener {
                                 player.sendMessage(ChatColor.GOLD + "Você forja uma nova chave");
                             }
                         } else {
-                            if (clickedItem.getType().equals(Material.FLINT) && NameSpacedKeys.isLock(clickedItem.getItemMeta())
+                            if (clickedItem.getType().equals(Material.FLINT) && ItemManager.isLock(clickedItem.getItemMeta())
                                     && event.getClickedInventory().getType() == InventoryType.PLAYER) {
 
                                     ItemMeta clickMeta = clickedItem.getItemMeta();
