@@ -79,4 +79,16 @@ public class InventoryChecker {
             }
         }
     }
+
+    public static void useItem(Player player, ItemStack item){
+        item.setAmount(item.getAmount() - 1);
+
+        if (item.getAmount() <= 0) {
+            // Se a quantidade for menor ou igual a 0, remove o item da mão do jogador
+            player.getInventory().setItemInMainHand(null);
+        } else {
+            // Atualiza o item na mão do jogador
+            player.getInventory().setItemInMainHand(item);
+        }
+    }
 }

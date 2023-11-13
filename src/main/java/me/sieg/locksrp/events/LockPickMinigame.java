@@ -1,6 +1,9 @@
 package me.sieg.locksrp.events;
 
 import me.sieg.locksrp.Main;
+import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.traps.Trap;
+import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.ChestKeeper;
 import me.sieg.locksrp.utils.InventoryChecker;
 import me.sieg.locksrp.utils.NameSpacedKeys;
@@ -85,6 +88,7 @@ public class LockPickMinigame implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        SaveDoor saveDoor = new SaveDoor();
         Player player = (Player) event.getWhoClicked();
 
         // Verifique se o inventário clicado é o menu específico
@@ -118,10 +122,54 @@ public class LockPickMinigame implements Listener {
                     event.getInventory().setItem(slot, new ItemStack(Material.AIR));
                 } else {
                     chances--;
-                }
+                    Location loc = ChestKeeper.getLastClickedChest(player.getUniqueId()).getLocation();
+                    loc.getWorld().playSound(loc, Sound.ITEM_SPYGLASS_USE, 0.3f, 0.1f);
+                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.3f, 1.0f);
+                    if(SaveDoor.isValidDoorBlock(loc.getBlock())){
+                        if(saveDoor.hasTrap(loc)){
+                            String trapTypeString = saveDoor.getTrap(loc);
+                            Trap trap = TrapType.valueOf(trapTypeString).getTrap();
+                            if(trap != null){
+                                trap.activate(player, loc);
+                            }
+                        }
+                    }else if(SaveDoor.isValidContainer(loc.getBlock())){
+                        Inventory inventory = saveDoor.getInventoryFromClickedBlock(loc.getBlock());
+                        ItemStack trapItem = inventory.getItem(1);
+                        if(trapItem != null && ItemManager.isTrap(trapItem.getItemMeta())){
+                            String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
+                            Trap trap = TrapType.valueOf(trapType).getTrap();
+                            if(trap != null){
+                                trap.activate(player, loc);
+                            }
+                        }
+                    }
 
+                }
                 if (chances < 1) {
                     player.closeInventory();
+                    Location loc = ChestKeeper.getLastClickedChest(player.getUniqueId()).getLocation();
+                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.3f , 0.1f);
+                    if(SaveDoor.isValidDoorBlock(loc.getBlock())){
+                        if(saveDoor.hasTrap(loc)){
+                            String trapTypeString = saveDoor.getTrap(loc);
+                            Trap trap = TrapType.valueOf(trapTypeString).getTrap();
+                            if(trap != null){
+                                trap.lastActivate(player, loc);
+                            }
+                        }
+                    }else if(SaveDoor.isValidContainer(loc.getBlock())){
+                        Inventory inventory = saveDoor.getInventoryFromClickedBlock(loc.getBlock());
+                        ItemStack trapItem = inventory.getItem(1);
+                        if(trapItem != null && ItemManager.isTrap(trapItem.getItemMeta())){
+                            String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
+                            Trap trap = TrapType.valueOf(trapType).getTrap();
+                            if(trap != null){
+                                trap.lastActivate(player, loc);
+                            }
+                        }
+                    }
+
                 }
 
                 chanceMeta.setDisplayName("" + chances);
@@ -142,7 +190,7 @@ public class LockPickMinigame implements Listener {
                         // Abre o inventário do baú para o jogador
                         player.openInventory(chestInventory);
                     }else if(block!= null && SaveDoor.isDoor(block)){
-                        SaveDoor saveDoor = new SaveDoor();
+
                         player.sendMessage("Você destranca a porta");
                         saveDoor.setDoorLocked(block.getLocation(),false);
                         player.closeInventory();
@@ -230,7 +278,15 @@ public class LockPickMinigame implements Listener {
     }
 
     public Boolean containTrap(Block block){
+        Location location = block.getLocation();
+        SaveDoor saveDoor = new SaveDoor();
+
+        if(saveDoor.hasTrap(location)){
+            return true;
+        }
         return false;
     }
+
+
 
 }

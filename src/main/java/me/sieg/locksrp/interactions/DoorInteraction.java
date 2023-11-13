@@ -1,8 +1,8 @@
 package me.sieg.locksrp.interactions;
 
+import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.events.LockPickMinigame;
 import me.sieg.locksrp.item.ItemManager;
-import me.sieg.locksrp.item.KeyFactory;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -33,7 +33,7 @@ public class DoorInteraction {
         Block clickedBlock = event.getClickedBlock();
         SaveDoor saveDoor = new SaveDoor();
         assert clickedBlock != null;
-        if (isValidDoorBlock(clickedBlock)) {
+        if (saveDoor.isValidDoorBlock(clickedBlock)) {
             Location loc = checkAndHandleTopHalfDoor(clickedBlock);
             boolean isLocked = saveDoor.isDoorLocked(loc);
             if (isLocked) {
@@ -49,17 +49,27 @@ public class DoorInteraction {
                     }else if(ItemManager.isLockRemover(item.getItemMeta())){
                         handleLockRemoverInteraction(event, loc);
                     }else if (ItemManager.isTrap(item.getItemMeta())){
+                        ItemMeta meta = item.getItemMeta();
+                        String owner = ItemManager.getOwner(meta);
+                        if(owner == null){
+                            messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma armadilha a um dono antes de colocar em uma porta", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                            return;
+                        }
                         handleTrapInteraction(event, loc);
                     }
+                }else if(ItemManager.isTrap(item.getItemMeta())){
+                    ItemMeta meta = item.getItemMeta();
+                    String owner = ItemManager.getOwner(meta);
+                    if(owner == null){
+                        messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma armadilha a um dono antes de colocar em uma porta", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+                        return;
+                    }
+                    messageSender.sendPlayerMessage(player, "&cVocê precisa colocar uma tranca antes de colocar uma armadilha", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                 }
             }
         }
     }
 
-    private boolean isValidDoorBlock(Block block) {
-        return block.getBlockData() instanceof Door || block.getBlockData() instanceof TrapDoor
-                || block.getBlockData() instanceof Gate;
-    }
 
 
     private Location checkAndHandleTopHalfDoor(Block clickedBlock) {
@@ -141,13 +151,8 @@ public class DoorInteraction {
                 messageSender.sendPlayerMessage(player, "&c Você não tem permissão para retirar trancas aqui", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                 return;
             }
-            ItemManager itemManager = new ItemManager();
-            String keyCode = saveDoor.getLockCode(loc);
-            Integer level = saveDoor.getLockLevel(loc);
-            ItemStack itemDrop = itemManager.generateLock(level, keyCode);
-            saveDoor.dropItemOnGround(loc, itemDrop);
-            saveDoor.removeLocationFromFile(loc);
-            messageSender.sendPlayerMessage(player, "&4Você removeu a tranca da porta", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+
+            cleanDoor(player, loc);
             event.setCancelled(true);
         }
     }
@@ -157,16 +162,7 @@ public class DoorInteraction {
         Integer level = Integer.valueOf(NameSpacedKeys.getNameSpacedKey(meta, "level"));
         saveDoor.saveLocationToFile(loc, false, keyCode, level);
 
-        // Diminui a quantidade do item em 1
-        item.setAmount(item.getAmount() - 1);
-
-        if (item.getAmount() <= 0) {
-            // Se a quantidade for menor ou igual a 0, remove o item da mão do jogador
-            player.getInventory().setItemInMainHand(null);
-        } else {
-            // Atualiza o item na mão do jogador
-            player.getInventory().setItemInMainHand(item);
-        }
+        InventoryChecker.useItem(player, item);
     }
 
 
@@ -190,14 +186,39 @@ public class DoorInteraction {
             messageSender.sendPlayerMessage(player, "&cA porta já tem uma armadilha", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
             return;
         }
-        if(ItemManager.isAlarmTrap(item.getItemMeta())){
-            saveDoor.addTrapToDoor(loc, "alarmTrap");
+        String trapType = ItemManager.getTrapType(item.getItemMeta());
+        String owner = ItemManager.getOwner(item.getItemMeta());
+        if(trapType != null) {
+            installTrap(player, loc, item, TrapType.valueOf(trapType), owner);
         }
+    }
+
+    private void installTrap(Player player, Location loc, ItemStack item, TrapType trapType, String owner){
+        InventoryChecker.useItem(player, item);
+        messageSender.sendPlayerMessage(player, "&fColocado a armadilha na porta", Sound.BLOCK_ANVIL_USE, 1.0f, 2.0f);
+        if(owner != null){
+            saveDoor.setDoorOwner(loc, owner);
+        }
+        saveDoor.addTrapToDoor(loc, trapType.getValue());
 
     }
-    //caso o de cima não de certo
-    private boolean isValidDoorBlockSaveDoor(Block block){
-       return saveDoor.isDoor(block);
+
+    private void cleanDoor(Player player,Location loc){
+        ItemManager itemManager = new ItemManager();
+        String keyCode = saveDoor.getLockCode(loc);
+        Integer level = saveDoor.getLockLevel(loc);
+        ItemStack itemDrop = itemManager.generateLock(level, keyCode);
+        saveDoor.dropItemOnGround(loc, itemDrop);
+        messageSender.sendPlayerMessage(player, "&4Você removeu a tranca da porta", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+        if(saveDoor.hasTrap(loc)){
+            String trapTypeString = saveDoor.getTrap(loc);
+            TrapType trapType = TrapType.valueOf(trapTypeString);
+            messageSender.sendPlayerMessage(player, "&4A porta tinha uma armadilha, ela também foi removida", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+            saveDoor.removeTrapFromDoor(loc);
+            ItemStack drop = itemManager.getTrap(trapType);
+            saveDoor.dropItemOnGround(loc, drop);
+        }
+        saveDoor.removeLocationFromFile(loc);
     }
 
 

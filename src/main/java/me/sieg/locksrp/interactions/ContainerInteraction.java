@@ -30,13 +30,14 @@ public class ContainerInteraction {
         Player player = event.getPlayer();
         Inventory chestInventory = player.getInventory();
         Block clickedBlock = event.getClickedBlock();
-        Inventory containerInventory = getInventoryFromClickedBlock(clickedBlock);
+        Inventory containerInventory = saveDoor.getInventoryFromClickedBlock(clickedBlock);
         if(containerInventory == null){
             return;
         }
 
         if (!InventoryChecker.hasUniversalKey(player)) {
             ItemStack firstItem = containerInventory.getItem(0);
+
 
             if (firstItem != null) {
                 if (ItemManager.isLock(firstItem.getItemMeta())) {
@@ -66,17 +67,5 @@ public class ContainerInteraction {
         }
     }
 
-    private Inventory getInventoryFromClickedBlock(Block clickedBlock) {
-        if (clickedBlock.getType() == Material.CHEST) {
-            Chest chest = (Chest) clickedBlock.getState();
-            return chest.getInventory();
-        } else if (clickedBlock.getType() == Material.BARREL) {
-            Barrel barrel = (Barrel) clickedBlock.getState();
-            return barrel.getInventory();
-        } else if (clickedBlock.getState() instanceof ShulkerBox) {
-            ShulkerBox shulkerBox = (ShulkerBox) clickedBlock.getState();
-            return shulkerBox.getInventory();
-        }
-        return null; // Retorna null se o bloco não for do tipo suportado
-    }
+
 }
