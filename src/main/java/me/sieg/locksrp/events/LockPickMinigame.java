@@ -69,13 +69,13 @@ public class LockPickMinigame implements Listener {
         ItemMeta chancesMeta = chances.getItemMeta();
 
         if(level == 1){
-            level = 7;
+            level = 8;
         }
         else if(level == 2){
-            level = 6;
+            level = 7;
         }
         else if(level ==3){
-            level = 5;
+            level = 6;
         }
 
         Integer chancePanel = 12 - level ;
@@ -123,8 +123,8 @@ public class LockPickMinigame implements Listener {
                 } else {
                     chances--;
                     Location loc = ChestKeeper.getLastClickedChest(player.getUniqueId()).getLocation();
-                    loc.getWorld().playSound(loc, Sound.ITEM_SPYGLASS_USE, 0.3f, 0.1f);
-                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.3f, 1.0f);
+                    loc.getWorld().playSound(loc, Sound.ITEM_SPYGLASS_USE, 0.1f, 0.1f);
+                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.1f, 1.0f);
                     if(SaveDoor.isValidDoorBlock(loc.getBlock())){
                         if(saveDoor.hasTrap(loc)){
                             String trapTypeString = saveDoor.getTrap(loc);
@@ -149,7 +149,7 @@ public class LockPickMinigame implements Listener {
                 if (chances < 1) {
                     player.closeInventory();
                     Location loc = ChestKeeper.getLastClickedChest(player.getUniqueId()).getLocation();
-                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.3f , 0.1f);
+                    loc.getWorld().playSound(loc, Sound.ENTITY_ITEM_BREAK, 0.2f , 0.1f);
                     if(SaveDoor.isValidDoorBlock(loc.getBlock())){
                         if(saveDoor.hasTrap(loc)){
                             String trapTypeString = saveDoor.getTrap(loc);

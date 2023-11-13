@@ -14,6 +14,11 @@ public class MagicAlarmTrap implements Trap{
 
 
     @Override
+    public void install(Player player, Location loc) {
+
+    }
+
+    @Override
     public void activate(Player player, Location loc) {
         MessageSender messageSender = new MessageSender();
         SaveDoor saveDoor = new SaveDoor();

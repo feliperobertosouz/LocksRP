@@ -4,6 +4,7 @@ import me.sieg.locksrp.interactions.DoorInteraction;
 import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.item.KeyFactory;
 import me.sieg.locksrp.item.LockFactory;
+import me.sieg.locksrp.item.MaterialKey;
 import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
@@ -51,11 +52,52 @@ public class PlayerInteract implements Listener {
                 doorInteraction.handleDoorInteraction(event);
             } else if (clickedBlock != null && clickedBlock.getType() == Material.GRINDSTONE) {
                 handleGrindStoneInteraction(event);
+            } else if (clickedBlock != null && (clickedBlock.getType() == Material.ANVIL || clickedBlock.getType() == Material.CHIPPED_ANVIL || clickedBlock.getType() == Material.DAMAGED_ANVIL)){
+                handleAnvilInteraction(event);
             }
         }
 
     }
 
+    private void handleAnvilInteraction(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack mainHandItem = player.getInventory().getItemInMainHand();
+        ItemStack offHandItem = player.getInventory().getItemInOffHand();
+
+        // Substitua "Material.CHAVE" pelo material real da chave que você está usando
+        if (ItemManager.isKey(mainHandItem.getItemMeta()) && offHandItem.getType() != Material.AIR) {
+            event.setCancelled(true);
+            // Substitua Material.ITEM_1, Material.ITEM_2 pelos materiais reais da sua lista
+            MaterialKey matchingMaterialKey = getMatchingMaterialKey(offHandItem.getType());
+            if (matchingMaterialKey != null) {
+                // Remove 1 do item na mão esquerda
+                offHandItem.setAmount(offHandItem.getAmount() - 1);
+
+                // Define o novo CustomModelData da chave na mão principal
+                int customModelData = matchingMaterialKey.getCustomModelData();
+                mainHandItem = setCustomModelData(mainHandItem, customModelData);
+                messageSender.sendPlayerMessage(player, "&6Você da uma bela embelezada na sua chave", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
+                // Atualiza o inventário do jogador
+                player.getInventory().setItemInMainHand(mainHandItem);
+            }
+        }
+    }
+
+
+    private ItemStack setCustomModelData(ItemStack item, int customModelData) {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(customModelData);
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+    private MaterialKey getMatchingMaterialKey(Material material) {
+        for (MaterialKey materialKey : MaterialKey.values()) {
+            if (materialKey.getMaterial() == material) {
+                return materialKey;
+            }
+        }
+        return null;
+    }
     private void handleGrindStoneInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();

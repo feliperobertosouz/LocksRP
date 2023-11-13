@@ -9,6 +9,11 @@ public class SpikeTrap implements Trap{
 
 
     @Override
+    public void install(Player player, Location loc) {
+
+    }
+
+    @Override
     public void activate(Player player, Location loc) {
         MessageSender messageSender = new MessageSender();
         loc.getWorld().playSound(loc, Sound.ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH, 1.0f, 1.0f);

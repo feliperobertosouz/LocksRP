@@ -8,14 +8,15 @@ import me.sieg.locksrp.traps.PoisonTrap;
 import me.sieg.locksrp.traps.SpikeTrap;
 
 public enum TrapType {
-    ALARM("ALARM", new AlarmTrap(), "Alarme"),
-    POISON("POISON", new PoisonTrap(), "Veneno"),
-    SPIKE("SPIKE", new SpikeTrap(), "Espinhos"),
-    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico");
-
+    ALARM("ALARM", new AlarmTrap(), "Alarme", 9999),
+    POISON("POISON", new PoisonTrap(), "Veneno", 9998),
+    SPIKE("SPIKE", new SpikeTrap(), "Espinhos", 9997),
+    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996),
+    REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995);
     public final String value;
     public final Trap trap;
     public final String displayName;
+    public final int customModelData;
 
     private static final Map<String, TrapType> trapTypeMap = new HashMap<>();
 
@@ -25,10 +26,11 @@ public enum TrapType {
         }
     }
 
-    private TrapType(String value, Trap trap, String displayName) {
+    private TrapType(String value, Trap trap, String displayName, int customModelData) {
         this.value = value;
         this.trap = trap;
         this.displayName = displayName;
+        this.customModelData = customModelData;
     }
 
     public String getValue() {

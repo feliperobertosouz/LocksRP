@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 
 public interface Trap {
+    void install(Player player, Location loc);
 
     void activate(Player player, Location loc);
 
