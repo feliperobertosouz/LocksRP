@@ -51,6 +51,12 @@ public class BlockBreak implements Listener {
                         saveDoor.dropItemOnGround(loc, itemDrop);
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
                         sender.sendPlayerMessage(player, "Voce quebrou a porta que estava com uma tranca", Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
+                        if(saveDoor.hasTrap(loc)){
+                            sender.sendPlayerMessage(player, "A porta tinha uma armadilha");
+                            saveDoor.removeTrapFromDoor(loc);
+                            ItemStack drop = itemManager.getAlarmTrap();
+                            saveDoor.dropItemOnGround(loc, drop);
+                        }
                         saveDoor.removeLocationFromFile(loc);
                     }else{
                         //System.out.println("NÃO PODE RETIRAR A TRANCA");
@@ -86,4 +92,5 @@ public class BlockBreak implements Listener {
             }
         }
     }
+
 }

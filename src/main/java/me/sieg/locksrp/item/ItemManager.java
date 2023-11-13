@@ -1,7 +1,7 @@
 package me.sieg.locksrp.item;
 
 import me.sieg.locksrp.Main;
-import me.sieg.locksrp.item.KeyFactory;
+import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -180,6 +180,11 @@ public class ItemManager {
         return alarmTrap;
     }
 
+    public ItemStack getTrap(TrapType trapType){
+        ItemStack trap = TrapFactory.createTrap(trapType);
+        return trap;
+    }
+
     public static Boolean isTrap(ItemMeta meta){
         if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isTrap"),
                 PersistentDataType.STRING) ||
@@ -190,15 +195,25 @@ public class ItemManager {
         return false;
     }
 
-    public static Boolean isAlarmTrap(ItemMeta meta){
-        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isAlarmTrap"),
-                PersistentDataType.STRING) ||
-                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isAlarmTrap"),
-                        PersistentDataType.BYTE)){
-            return true;
-        }
-        return false;
+    public static ItemStack setOwner(ItemStack item, String owner){
+        ItemMeta meta = item.getItemMeta();
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "owner", owner);
+        item.setItemMeta(meta);
+        return item;
+
     }
 
+    public static String getOwner(ItemMeta meta){
+        String owner = NameSpacedKeys.getNameSpacedKey(meta, "owner");
+        return owner;
+    }
+
+    public static String getTrapType(ItemMeta meta){
+        if(ItemManager.isTrap(meta)){
+            String trapType = NameSpacedKeys.getNameSpacedKey(meta, "trapType");
+            return trapType;
+        }
+        return null;
+    }
 
 }

@@ -1,6 +1,8 @@
 package me.sieg.locksrp.commands;
 import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.item.LockFactory;
+import me.sieg.locksrp.traps.Trap;
+import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -115,6 +117,11 @@ public class LocksRPCommands implements CommandExecutor {
                     sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma armadilha de alarme");
                     ItemStack alarmTrap = items.getAlarmTrap();
                     player.getInventory().addItem(alarmTrap);
+                }else if(args[0].equalsIgnoreCase("getTrap")){
+                    sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma armadilha de " + args[1] );
+                    TrapType trap = TrapType.valueOf(args[1]);
+                    ItemStack trapItem = items.getTrap(trap);
+                    player.getInventory().addItem(trapItem);
                 }
                 else{
                     commandAjuda(args, player);

@@ -4,12 +4,18 @@ import me.sieg.locksrp.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Gate;
+import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -218,6 +224,25 @@ public class SaveDoor {
     }
 
 
+    public static boolean isValidDoorBlock(Block block) {
+        return block.getBlockData() instanceof Door || block.getBlockData() instanceof TrapDoor
+                || block.getBlockData() instanceof Gate;
+    }
+
+    public static Inventory getInventoryFromClickedBlock(Block clickedBlock) {
+        if (clickedBlock.getType() == Material.CHEST) {
+            Chest chest = (Chest) clickedBlock.getState();
+            return chest.getInventory();
+        } else if (clickedBlock.getType() == Material.BARREL) {
+            Barrel barrel = (Barrel) clickedBlock.getState();
+            return barrel.getInventory();
+        } else if (clickedBlock.getState() instanceof ShulkerBox) {
+            ShulkerBox shulkerBox = (ShulkerBox) clickedBlock.getState();
+            return shulkerBox.getInventory();
+        }
+        return null; // Retorna null se o bloco não for do tipo suportado
+    }
+
     //ADDTRAP
     public void addTrapToDoor(Location location, String trapName) {
         String key = locationToString(location);
@@ -253,5 +278,43 @@ public class SaveDoor {
 
         // Verifica se a localização está registrada e se há uma armadilha associada
         return doorsConfig.contains(key + ".trap");
+    }
+
+    public String getTrap(Location location) {
+        String key = locationToString(location);
+
+        // Verifica se a localização está registrada e se há uma armadilha associada
+        if (doorsConfig.contains(key + ".trap")) {
+            return doorsConfig.getString(key + ".trap");
+        }
+
+        // Retorna null se não houver armadilha associada
+        return null;
+    }
+
+    public void removeDoor(Location location){
+        removeLocationFromFile(location);
+        if(hasTrap(location)){
+            removeTrapFromDoor(location);
+        }
+    }
+
+    public void setDoorOwner(Location location, String owner) {
+
+        String key = locationToString(location);
+
+        doorsConfig.set(key + ".owner", owner);
+
+        saveDoorsConfig();
+    }
+
+    public String getDoorOwner(Location location) {
+        String key = locationToString(location);
+
+        if (doorsConfig.contains(key + ".owner")) {
+            return doorsConfig.getString(key + ".owner");
+        }
+
+        return null; // Retorna null se não houver proprietário registrado para a localização
     }
 }
