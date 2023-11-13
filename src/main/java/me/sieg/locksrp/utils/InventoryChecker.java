@@ -80,6 +80,30 @@ public class InventoryChecker {
         }
     }
 
+    public static void removeLockPick(Player player, int amount) {
+        PlayerInventory inventory = player.getInventory();
+        ItemStack[] contents = inventory.getContents();
+
+        int remainingAmount = amount;
+
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item != null && item.getType() == Material.STICK) {
+                if (ItemManager.isLockPick(item.getItemMeta())) {
+                    int itemAmount = item.getAmount();
+                    if (itemAmount >= remainingAmount) {
+                        item.setAmount(itemAmount - remainingAmount);
+                        inventory.setItem(i, item);
+                        break;
+                    } else {
+                        remainingAmount -= itemAmount;
+                        inventory.setItem(i, null);
+                    }
+                }
+            }
+        }
+    }
+
     public static void useItem(Player player, ItemStack item){
         item.setAmount(item.getAmount() - 1);
 

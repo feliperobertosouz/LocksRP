@@ -7,6 +7,11 @@ import org.bukkit.entity.Player;
 
 public class AlarmTrap implements Trap{
     @Override
+    public void install(Player player, Location loc) {
+
+    }
+
+    @Override
     public void activate(Player player, Location loc) {
         MessageSender messageSender = new MessageSender();
         loc.getWorld().playSound(loc, org.bukkit.Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);

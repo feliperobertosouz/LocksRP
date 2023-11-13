@@ -179,7 +179,6 @@ public class DoorInteraction {
     }
 
     private void handleTrapInteraction(PlayerInteractEvent event, Location loc){
-        messageSender.sendPlayerMessage(event.getPlayer(), "&cTRAP INTERACTION", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if(saveDoor.hasTrap(loc)){

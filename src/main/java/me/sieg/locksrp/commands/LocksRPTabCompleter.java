@@ -40,6 +40,7 @@ public class LocksRPTabCompleter implements TabCompleter {
                 results.add("MAGIC_ALARM");
                 results.add("SPIKE");
                 results.add("POISON");
+                results.add("REINFORCEMENT");
             }
         }
         return results;

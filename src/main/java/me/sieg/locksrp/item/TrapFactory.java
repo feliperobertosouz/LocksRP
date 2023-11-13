@@ -13,7 +13,7 @@ import java.util.List;
 public class TrapFactory {
 
     public static ItemStack getTrap(){
-        ItemStack trap = new ItemStack(Material.TRIPWIRE_HOOK);
+        ItemStack trap = new ItemStack(Material.POPPED_CHORUS_FRUIT);
         ItemMeta meta = trap.getItemMeta();
         meta = NameSpacedKeys.setNameSpacedKey(meta,"isTrap", "true");
         trap.setItemMeta(meta);
@@ -42,6 +42,7 @@ public class TrapFactory {
         newlore.add(ChatColor.WHITE + "RIGHT CLICK EM UMA MESA DE FERRARIA PARA LHE DEFINIR COMO DONO");
         newlore.add(ChatColor.GRAY + "OWNER: ???");
         meta.setLore(newlore);
+        meta.setCustomModelData(trapType.customModelData);
         trap.setItemMeta(meta);
         return trap;
     }

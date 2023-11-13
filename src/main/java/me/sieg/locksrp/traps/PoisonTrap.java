@@ -8,6 +8,11 @@ import org.bukkit.potion.PotionEffectType;
 
 public class PoisonTrap implements Trap{
     @Override
+    public void install(Player player, Location loc) {
+
+    }
+
+    @Override
     public void activate(Player player, Location loc) {
 
     }
