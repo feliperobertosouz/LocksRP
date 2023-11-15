@@ -39,8 +39,6 @@ public class TrapFactory {
         meta.setDisplayName("Armadilha de " + trapType.getDisplayName());
         List<String> newlore = new ArrayList<>();
         newlore.add(ChatColor.GOLD + "RIGHT CLICK EM UMA PORTA OU 2º SLOT DO BAU PARA USAR A" + trapType.getValue() + " TRAP");
-        newlore.add(ChatColor.WHITE + "RIGHT CLICK EM UMA MESA DE FERRARIA PARA LHE DEFINIR COMO DONO");
-        newlore.add(ChatColor.GRAY + "OWNER: ???");
         meta.setLore(newlore);
         meta.setCustomModelData(trapType.customModelData);
         trap.setItemMeta(meta);

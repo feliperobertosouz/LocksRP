@@ -1,20 +1,52 @@
 package me.sieg.locksrp.traps;
 
 import me.sieg.locksrp.item.ItemManager;
+import me.sieg.locksrp.utils.InventoryChecker;
 import me.sieg.locksrp.utils.MessageSender;
 import me.sieg.locksrp.utils.SaveDoor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class MagicAlarmTrap implements Trap{
 
 
     @Override
-    public void install(Player player, Location loc) {
+    public void install(PlayerInteractEvent event, Player player, Location loc, ItemStack trapItem) {
+        if(ItemManager.getOwner(trapItem.getItemMeta()) != null){
+            SaveDoor saveDoor = new SaveDoor();
+            String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
+            saveDoor.addTrapToDoor(loc,trapType);
+            String owner = ItemManager.getOwner(trapItem.getItemMeta());
+            saveDoor.setDoorOwner(loc,owner);
+            InventoryChecker.useItem(player,trapItem);
+        }else {
+            MessageSender.sendPlayerMessage(player,"&c Você precisa dar um dono a essa armadilha!");
+            event.setCancelled(true);
+        }
+
+    }
+
+    @Override
+    public void smithingTableHandler(Player player, ItemStack item) {
+        MessageSender messageSender = new MessageSender();
+        messageSender.sendPlayerMessage(player, "&6 Você se torna dono desta armadilha", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
+        ItemMeta meta = item.getItemMeta();
+        List<String> newlore = meta.getLore();
+        newlore.add(ChatColor.GRAY + "OWNER: " + player.getName());
+        meta.setLore(newlore);
+        item.setItemMeta(meta);
+        item = ItemManager.setOwner(item, player.getName());
+        player.getInventory().setItemInMainHand(item);
+        messageSender.sendPlayerMessage(player, "&5 Parece que agora você é meu dono!");
 
     }
 
