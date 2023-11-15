@@ -5,6 +5,7 @@ import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.item.KeyFactory;
 import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.item.MaterialKey;
+import me.sieg.locksrp.traps.Trap;
 import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
@@ -134,16 +135,12 @@ public class PlayerInteract implements Listener {
                 player.getInventory().setItemInMainHand(item);
             }else if(ItemManager.isTrap(item.getItemMeta())){
                 event.setCancelled(true);
-                messageSender.sendPlayerMessage(player, "&6 Você se torna dono desta armadilha", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-                ItemMeta meta = item.getItemMeta();
-
-                List<String> newlore = meta.getLore();
-                newlore.set(2, ChatColor.GRAY + "OWNER: " + player.getName());
-                meta.setLore(newlore);
-                item.setItemMeta(meta);
-                item = ItemManager.setOwner(item, player.getName());
-                player.getInventory().setItemInMainHand(item);
-
+                String trapTypeString = ItemManager.getTrapType(item.getItemMeta());
+                TrapType trapType = TrapType.valueOf(trapTypeString);
+                Trap trap = trapType.getTrap();
+                if(trap != null){
+                    trap.smithingTableHandler(player, item);
+                }
             }
         }
     }

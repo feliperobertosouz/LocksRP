@@ -1,5 +1,6 @@
 package me.sieg.locksrp.interactions;
 
+import me.sieg.locksrp.traps.Trap;
 import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.events.LockPickMinigame;
 import me.sieg.locksrp.item.ItemManager;
@@ -49,21 +50,17 @@ public class DoorInteraction {
                     }else if(ItemManager.isLockRemover(item.getItemMeta())){
                         handleLockRemoverInteraction(event, loc);
                     }else if (ItemManager.isTrap(item.getItemMeta())){
-                        ItemMeta meta = item.getItemMeta();
-                        String owner = ItemManager.getOwner(meta);
-                        if(owner == null){
-                            messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma armadilha a um dono antes de colocar em uma porta", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
-                            return;
-                        }
+//                        ItemMeta meta = item.getItemMeta();
+//                        String owner = ItemManager.getOwner(meta);
+//                        if(owner == null){
+//                            messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma armadilha a um dono antes de colocar em uma porta", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
+//                            return;
+//                        }
                         handleTrapInteraction(event, loc);
                     }
                 }else if(ItemManager.isTrap(item.getItemMeta())){
                     ItemMeta meta = item.getItemMeta();
                     String owner = ItemManager.getOwner(meta);
-                    if(owner == null){
-                        messageSender.sendPlayerMessage(player, "&cVocê precisa vincular uma armadilha a um dono antes de colocar em uma porta", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
-                        return;
-                    }
                     messageSender.sendPlayerMessage(player, "&cVocê precisa colocar uma tranca antes de colocar uma armadilha", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);
                 }
             }
@@ -179,6 +176,7 @@ public class DoorInteraction {
     }
 
     private void handleTrapInteraction(PlayerInteractEvent event, Location loc){
+        System.out.println("HANDLE TRAP INTERACTION");
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if(saveDoor.hasTrap(loc)){
@@ -186,20 +184,17 @@ public class DoorInteraction {
             return;
         }
         String trapType = ItemManager.getTrapType(item.getItemMeta());
-        String owner = ItemManager.getOwner(item.getItemMeta());
         if(trapType != null) {
-            installTrap(player, loc, item, TrapType.valueOf(trapType), owner);
+            installTrap(event, player, loc, item, TrapType.valueOf(trapType));
         }
     }
 
-    private void installTrap(Player player, Location loc, ItemStack item, TrapType trapType, String owner){
-        InventoryChecker.useItem(player, item);
+    private void installTrap(PlayerInteractEvent event, Player player, Location loc, ItemStack item, TrapType trapType){
         messageSender.sendPlayerMessage(player, "&fColocado a armadilha na porta", Sound.BLOCK_ANVIL_USE, 1.0f, 2.0f);
-        if(owner != null){
-            saveDoor.setDoorOwner(loc, owner);
+        Trap trap = TrapType.getTrapByType(trapType);
+        if(trap != null){
+            trap.install(event,player, loc, item);
         }
-        saveDoor.addTrapToDoor(loc, trapType.getValue());
-
     }
 
     private void cleanDoor(Player player,Location loc){

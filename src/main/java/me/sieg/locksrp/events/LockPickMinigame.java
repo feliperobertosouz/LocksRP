@@ -69,14 +69,15 @@ public class LockPickMinigame implements Listener {
         ItemMeta chancesMeta = chances.getItemMeta();
 
         if(level == 1){
-            level = 8;
+            level = 9;
         }
         else if(level == 2){
-            level = 7;
+            level = 8;
         }
         else if(level ==3){
-            level = 6;
+            level = 7;
         }
+
 
         Integer chancePanel = 12 - level ;
         chancesMeta.setDisplayName("" + chancePanel);

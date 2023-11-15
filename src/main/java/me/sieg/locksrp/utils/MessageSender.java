@@ -5,14 +5,14 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class MessageSender {
-    private String prefix = ChatColor.translateAlternateColorCodes('&', "&8[&6LocksRP&8] &7");
+    private static String prefix = ChatColor.translateAlternateColorCodes('&', "&8[&6LocksRP&8] &7");
 
 
-    private String chatColor(String message){
+    private static String chatColor(String message){
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public void sendPlayerMessage(Player player, String message){
+    public static void  sendPlayerMessage(Player player, String message){
         player.sendMessage(prefix + chatColor(message));
     }
 
