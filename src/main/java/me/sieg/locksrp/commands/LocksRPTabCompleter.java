@@ -41,6 +41,8 @@ public class LocksRPTabCompleter implements TabCompleter {
                 results.add("SPIKE");
                 results.add("POISON");
                 results.add("REINFORCEMENT");
+                results.add("SPECTRAL");
+                results.add("EXPLOSIVE");
             }
         }
         return results;

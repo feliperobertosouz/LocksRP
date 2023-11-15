@@ -12,7 +12,10 @@ public enum TrapType {
     POISON("POISON", new PoisonTrap(), "Veneno", 9998),
     SPIKE("SPIKE", new SpikeTrap(), "Espinhos", 9997),
     MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996),
-    REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995);
+    REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995),
+    SPECTRAL("SPECTRAL", new SpectralTrap(), "Espectral", 9994),
+    EXPLOSIVE("EXPLOSIVE", new ExplosiveTrap(), "Explosiva", 9993);
+
     public final String value;
     public final Trap trap;
     public final String displayName;
