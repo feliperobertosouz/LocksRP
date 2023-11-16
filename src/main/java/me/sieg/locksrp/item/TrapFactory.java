@@ -39,9 +39,40 @@ public class TrapFactory {
         meta.setDisplayName("Armadilha de " + trapType.getDisplayName());
         List<String> newlore = new ArrayList<>();
         newlore.add(ChatColor.GOLD + "RIGHT CLICK EM UMA PORTA OU 2º SLOT DO BAU PARA USAR A" + trapType.getValue() + " TRAP");
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta,"maxUses", trapType.getMaxUses());
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta, "uses", trapType.getMaxUses());
+        if(trapType.getMaxUses() == -1) {
+            newlore.add(ChatColor.GOLD + "USOS: " + ChatColor.RED + "INQUEBRAVEl");
+        }else{
+            newlore.add(ChatColor.GRAY + "USOS: " + ChatColor.WHITE + ItemManager.getUses(meta) + "/" + ItemManager.getMaxUses(meta));
+        }
         meta.setLore(newlore);
         meta.setCustomModelData(trapType.customModelData);
         trap.setItemMeta(meta);
+        return trap;
+    }
+
+    public static ItemStack createTrap(TrapType trapType, int uses){
+        System.out.println("RODANDO O CREATE TRAP JA COM USOS");
+        System.out.println("USOS: " + uses);
+        ItemStack trap = getTrap();
+        ItemMeta meta = trap.getItemMeta();
+        meta = NameSpacedKeys.setNameSpacedKey(meta, "trapType", trapType.getValue());
+        meta.setDisplayName("Armadilha de " + trapType.getDisplayName());
+        List<String> newlore = new ArrayList<>();
+        newlore.add(ChatColor.GOLD + "RIGHT CLICK EM UMA PORTA OU 2º SLOT DO BAU PARA USAR A" + trapType.getValue() + " TRAP");
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta,"maxUses", trapType.getMaxUses());
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta, "uses", uses);
+        if(trapType.getMaxUses() == -1) {
+            newlore.add(ChatColor.GOLD + "USOS: " + ChatColor.RED + "INQUEBRAVEl");
+        }else{
+            newlore.add(ChatColor.GRAY + "USOS: " + ChatColor.WHITE + uses + "/" + ItemManager.getMaxUses(meta));
+        }
+        meta.setLore(newlore);
+        meta.setCustomModelData(trapType.customModelData);
+        trap.setItemMeta(meta);
+
+        System.out.println("USOS UPDATE: " +ItemManager.getUses(trap.getItemMeta()));
         return trap;
     }
 

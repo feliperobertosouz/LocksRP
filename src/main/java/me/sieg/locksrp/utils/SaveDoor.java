@@ -317,4 +317,48 @@ public class SaveDoor {
 
         return null; // Retorna null se não houver proprietário registrado para a localização
     }
+
+    public void setUses(Location location, int uses) {
+        String key = locationToString(location);
+
+        doorsConfig.set(key + ".uses", uses);
+
+        saveDoorsConfig();
+    }
+
+    public int getUses(Location location) {
+        String key = locationToString(location);
+
+        if (doorsConfig.contains(key + ".uses")) {
+            return doorsConfig.getInt(key + ".uses");
+        }
+
+        System.out.println("Não tinha uses");
+        setUses(location, 10);
+        return 5;
+    }
+
+    public void decrementUses(Location location) {
+        String key = locationToString(location);
+        int uses = getUses(location);
+        if (doorsConfig.contains(key + ".uses")) {
+            uses = doorsConfig.getInt(key + ".uses");
+
+            if (uses > 0 || uses == -1) {
+                // Se uses for -1, a armadilha é inquebrável, então não decrementamos
+                if (uses != -1) {
+                    uses--;
+                    if(uses <= 0){
+                        removeTrapFromDoor(location);
+                        doorsConfig.set(key + ".uses", null);
+                    }
+                    doorsConfig.set(key + ".uses", uses);
+                    saveDoorsConfig();
+                }
+            }
+        }else{
+            System.out.println("Não tinha uses");
+            setUses(location, 10);
+        }
+    }
 }

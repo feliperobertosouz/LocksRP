@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
-public class MagicAlarmTrap implements Trap{
+public class MagicAlarmTrap extends SuperTrap{
 
 
     @Override
@@ -73,6 +73,8 @@ public class MagicAlarmTrap implements Trap{
         }
 
     }
+
+
 
     @Override
     public void lastActivate(Player player, Location loc) {

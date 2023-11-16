@@ -208,9 +208,8 @@ public class DoorInteraction {
             String trapTypeString = saveDoor.getTrap(loc);
             TrapType trapType = TrapType.valueOf(trapTypeString);
             messageSender.sendPlayerMessage(player, "&4A porta tinha uma armadilha, ela também foi removida", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
-            saveDoor.removeTrapFromDoor(loc);
-            ItemStack drop = itemManager.getTrap(trapType);
-            saveDoor.dropItemOnGround(loc, drop);
+            Trap trap = TrapType.getTrapByType(trapType);
+            trap.removeTrap(player, loc);
         }
         saveDoor.removeLocationFromFile(loc);
     }

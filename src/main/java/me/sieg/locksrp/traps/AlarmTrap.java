@@ -10,15 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class AlarmTrap implements Trap{
+public class AlarmTrap extends SuperTrap{
 
     @Override
     public void install(PlayerInteractEvent event,Player player, Location loc, ItemStack trapItem) {
         MessageSender messageSender = new MessageSender();
-        SaveDoor saveDoor = new SaveDoor();
-        String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
-        saveDoor.addTrapToDoor(loc, trapType);
-        InventoryChecker.useItem(player, trapItem);
+        super.install(event, player, loc, trapItem);
         messageSender.sendPlayerMessage(player, "&c Você acaba instalando uma armadilha de alarme na tranca");
     }
 
@@ -39,5 +36,8 @@ public class AlarmTrap implements Trap{
         MessageSender messageSender = new MessageSender();
         loc.getWorld().playSound(loc, Sound.BLOCK_BELL_USE, 10.0f, 2.0f);
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de alarme");
+        super.decrementUses(player,loc);
     }
+
+
 }

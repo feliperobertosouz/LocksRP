@@ -1,6 +1,8 @@
 package me.sieg.locksrp.events;
 import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.item.LockFactory;
+import me.sieg.locksrp.traps.Trap;
+import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Barrel;
@@ -52,10 +54,11 @@ public class BlockBreak implements Listener {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
                         sender.sendPlayerMessage(player, "Voce quebrou a porta que estava com uma tranca", Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
                         if(saveDoor.hasTrap(loc)){
-                            sender.sendPlayerMessage(player, "A porta tinha uma armadilha");
-                            saveDoor.removeTrapFromDoor(loc);
-                            ItemStack drop = itemManager.getAlarmTrap();
-                            saveDoor.dropItemOnGround(loc, drop);
+                            String trapTypeString = saveDoor.getTrap(loc);
+                            TrapType trapType = TrapType.valueOf(trapTypeString);
+                            sender.sendPlayerMessage(player, "&4A porta tinha uma armadilha, ela também foi removida", Sound.BLOCK_DISPENSER_DISPENSE, 0.1f, 1.5f);
+                            Trap trap = TrapType.getTrapByType(trapType);
+                            trap.removeTrap(player, loc);
                         }
                         saveDoor.removeLocationFromFile(loc);
                     }else{
