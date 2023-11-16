@@ -15,5 +15,8 @@ public interface Trap {
 
     void lastActivate(Player player, Location loc);
 
+    void removeTrap(Player player, Location loc);
+
+    ItemStack getTrapItem(ItemStack item);
 
 }

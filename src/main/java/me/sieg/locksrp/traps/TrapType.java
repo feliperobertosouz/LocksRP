@@ -8,18 +8,19 @@ import me.sieg.locksrp.traps.PoisonTrap;
 import me.sieg.locksrp.traps.SpikeTrap;
 
 public enum TrapType {
-    ALARM("ALARM", new AlarmTrap(), "Alarme", 9999),
-    POISON("POISON", new PoisonTrap(), "Veneno", 9998),
-    SPIKE("SPIKE", new SpikeTrap(), "Espinhos", 9997),
-    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996),
-    REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995),
-    SPECTRAL("SPECTRAL", new SpectralTrap(), "Espectral", 9994),
-    EXPLOSIVE("EXPLOSIVE", new ExplosiveTrap(), "Explosiva", 9993);
+    ALARM("ALARM", new AlarmTrap(), "Alarme", 9999, 10),
+    POISON("POISON", new PoisonTrap(), "Veneno", 9998, 10),
+    SPIKE("SPIKE", new SpikeTrap(), "Espinhos", 9997, 10),
+    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996, 10),
+    REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995, -1),
+    SPECTRAL("SPECTRAL", new SpectralTrap(), "Espectral", 9994, 10),
+    EXPLOSIVE("EXPLOSIVE", new ExplosiveTrap(), "Explosiva", 9993, 10);
 
     public final String value;
     public final Trap trap;
     public final String displayName;
     public final int customModelData;
+    public final int maxUses;
 
     private static final Map<String, TrapType> trapTypeMap = new HashMap<>();
 
@@ -29,11 +30,12 @@ public enum TrapType {
         }
     }
 
-    private TrapType(String value, Trap trap, String displayName, int customModelData) {
+    private TrapType(String value, Trap trap, String displayName, int customModelData, int MaxUses) {
         this.value = value;
         this.trap = trap;
         this.displayName = displayName;
         this.customModelData = customModelData;
+        this.maxUses = MaxUses;
     }
 
     public String getValue() {
@@ -47,6 +49,8 @@ public enum TrapType {
     public String getDisplayName() {
         return displayName;
     }
+
+    public int getMaxUses() { return maxUses;}
 
     public static Trap getTrapByType(String trapType) {
         return trapTypeMap.get(trapType.toUpperCase()).trap;

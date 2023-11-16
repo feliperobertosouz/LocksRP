@@ -11,21 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SpectralTrap implements Trap {
-    @Override
-    public void install(PlayerInteractEvent event, Player player, Location loc, ItemStack trapItem) {
-        MessageSender messageSender = new MessageSender();
-        SaveDoor saveDoor = new SaveDoor();
-        String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
-        saveDoor.addTrapToDoor(loc, trapType);
-        InventoryChecker.useItem(player, trapItem);
-        messageSender.sendPlayerMessage(player, "&c Você acaba instalando uma armadilha espectral na tranca");
-    }
-
-    @Override
-    public void smithingTableHandler(Player player, ItemStack item) {
-
-    }
+public class SpectralTrap extends SuperTrap {
 
     @Override
     public void activate(Player player, Location loc) {
@@ -39,5 +25,8 @@ public class SpectralTrap implements Trap {
         MessageSender messageSender = new MessageSender();
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo espectral");
         player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 5*80, 0));
+        super.decrementUses(player,loc);
     }
+
+
 }

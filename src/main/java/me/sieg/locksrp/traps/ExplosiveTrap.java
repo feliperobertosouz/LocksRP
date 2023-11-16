@@ -10,21 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ExplosiveTrap implements Trap {
-    @Override
-    public void install(PlayerInteractEvent event, Player player, Location loc, ItemStack trapItem) {
-        MessageSender messageSender = new MessageSender();
-        SaveDoor saveDoor = new SaveDoor();
-        String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
-        saveDoor.addTrapToDoor(loc, trapType);
-        InventoryChecker.useItem(player, trapItem);
-        messageSender.sendPlayerMessage(player, "&c Você acaba instalando uma armadilha explosiva na tranca");
-    }
-
-    @Override
-    public void smithingTableHandler(Player player, ItemStack item) {
-
-    }
+public class ExplosiveTrap extends SuperTrap {
 
     @Override
     public void activate(Player player, Location loc) {

@@ -1,6 +1,7 @@
 package me.sieg.locksrp.item;
 
 import me.sieg.locksrp.Main;
+import me.sieg.locksrp.traps.Trap;
 import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.NameSpacedKeys;
 import org.bukkit.ChatColor;
@@ -100,6 +101,28 @@ public class ItemManager {
         return false;
     }
 
+    public static int getUses(ItemMeta itemMeta) {
+        if(itemMeta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "uses"),
+                PersistentDataType.INTEGER)){
+            int uses = itemMeta.getPersistentDataContainer().get(new NamespacedKey(Main.getPlugin(), "uses"),
+                    PersistentDataType.INTEGER);
+            return uses;
+        }
+        return 0;
+    }
+
+    public static ItemStack setUses(ItemStack item, int uses){
+        ItemMeta meta = item.getItemMeta();
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta, "uses", uses);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public static ItemMeta setUsesMeta(ItemMeta meta, int uses){
+        meta = NameSpacedKeys.setNameSpacedKeyInt(meta, "uses", uses);
+        return meta;
+    }
+
 
     public ItemStack getKeyItem(int amount){
         ItemStack chave = KeyFactory.createKey(amount);
@@ -182,6 +205,8 @@ public class ItemManager {
 
     public ItemStack getTrap(TrapType trapType){
         ItemStack trap = TrapFactory.createTrap(trapType);
+        Trap trapObject = trapType.getTrap();
+        trap = trapObject.getTrapItem(trap);
         return trap;
     }
 
@@ -214,6 +239,55 @@ public class ItemManager {
             return trapType;
         }
         return null;
+    }
+
+    public static int getMaxUses(ItemMeta meta){
+        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "maxUses"),
+                PersistentDataType.INTEGER)){
+            int uses = meta.getPersistentDataContainer().get(new NamespacedKey(Main.getPlugin(), "maxUses"),
+                    PersistentDataType.INTEGER);
+            return uses;
+        }
+        return -1;
+    }
+
+    public static ItemStack decrementUses(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+
+        if (meta != null && meta.hasCustomModelData()) {
+            int customModelData = meta.getCustomModelData();
+
+            int uses = getUses(meta);
+
+            // Decrementa o número de usos
+            if (uses > 0 || uses == -1) {
+                // Se uses for -1, a armadilha é inquebrável, então não decrementamos
+                    uses--;
+                    if(uses <= 0){
+                        return new ItemStack(Material.AIR);
+                    }
+                    meta = setUsesMeta(meta, uses);
+
+                itemStack.setItemMeta(meta);
+            }
+        }
+
+        return itemStack;
+    }
+
+    public static ItemStack updateLastLoreLine(ItemStack itemStack, String newLastLine) {
+        if (itemStack != null && itemStack.hasItemMeta()) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            List<String> lore = itemMeta.getLore();
+
+            if (lore != null && !lore.isEmpty()) {
+                lore.set(lore.size() - 1, newLastLine);
+                itemMeta.setLore(lore);
+                itemStack.setItemMeta(itemMeta);
+            }
+        }
+
+        return itemStack;
     }
 
 }

@@ -11,23 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class PoisonTrap implements Trap{
-
-
-    @Override
-    public void install(PlayerInteractEvent event, Player player, Location loc, ItemStack trapItem) {
-        MessageSender messageSender = new MessageSender();
-        SaveDoor saveDoor = new SaveDoor();
-        String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
-        saveDoor.addTrapToDoor(loc, trapType);
-        InventoryChecker.useItem(player, trapItem);
-        messageSender.sendPlayerMessage(player, "&c Você acaba instalando uma armadilha de veneno na tranca");
-    }
-
-    @Override
-    public void smithingTableHandler(Player player, ItemStack item) {
-
-    }
+public class PoisonTrap extends SuperTrap{
 
     @Override
     public void activate(Player player, Location loc) {
@@ -40,5 +24,8 @@ public class PoisonTrap implements Trap{
         player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*40, 2));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20*10 , 2));
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de veneno");
+        super.decrementUses(player,loc);
     }
+
+
 }
