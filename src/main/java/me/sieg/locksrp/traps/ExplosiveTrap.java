@@ -23,5 +23,6 @@ public class ExplosiveTrap extends SuperTrap {
         player.damage(15.0);
         SaveDoor saveDoor = new SaveDoor();
         saveDoor.removeTrapFromDoor(loc);
+        super.decrementUses(player,loc);
     }
 }

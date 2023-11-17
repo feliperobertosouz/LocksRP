@@ -176,7 +176,6 @@ public class DoorInteraction {
     }
 
     private void handleTrapInteraction(PlayerInteractEvent event, Location loc){
-        System.out.println("HANDLE TRAP INTERACTION");
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if(saveDoor.hasTrap(loc)){

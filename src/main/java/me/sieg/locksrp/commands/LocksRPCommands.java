@@ -1,6 +1,7 @@
 package me.sieg.locksrp.commands;
 import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.item.LockFactory;
+import me.sieg.locksrp.item.TrapFactory;
 import me.sieg.locksrp.traps.Trap;
 import me.sieg.locksrp.traps.TrapType;
 import me.sieg.locksrp.utils.NameSpacedKeys;
@@ -121,6 +122,12 @@ public class LocksRPCommands implements CommandExecutor {
                     sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu uma armadilha de " + args[1] );
                     TrapType trap = TrapType.valueOf(args[1]);
                     ItemStack trapItem = items.getTrap(trap);
+                    player.getInventory().addItem(trapItem);
+                }else if(args[0].equalsIgnoreCase("getCustomTrap")){
+                    sender.sendMessage( " Você recebeu uma armadilha de " + args[1] + "com durabilidade especial");
+                    TrapType trap = TrapType.valueOf(args[1]);
+                    int maxUses = Integer.parseInt(args[2]);
+                    ItemStack trapItem = TrapFactory.createTrap(trap, maxUses, maxUses);
                     player.getInventory().addItem(trapItem);
                 }
                 else{

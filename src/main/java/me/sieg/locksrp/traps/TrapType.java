@@ -9,12 +9,12 @@ import me.sieg.locksrp.traps.SpikeTrap;
 
 public enum TrapType {
     ALARM("ALARM", new AlarmTrap(), "Alarme", 9999, 10),
-    POISON("POISON", new PoisonTrap(), "Veneno", 9998, 10),
+    POISON("POISON", new PoisonTrap(), "Veneno", 9998, 3),
     SPIKE("SPIKE", new SpikeTrap(), "Espinhos", 9997, 10),
-    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996, 10),
+    MAGIC_ALARM("MAGIC_ALARM", new MagicAlarmTrap(), "Alarme Mágico", 9996, 100),
     REINFORCEMENT("REINFORCEMENT", new ReinforcementTrap(), "Reforçamento", 9995, -1),
-    SPECTRAL("SPECTRAL", new SpectralTrap(), "Espectral", 9994, 10),
-    EXPLOSIVE("EXPLOSIVE", new ExplosiveTrap(), "Explosiva", 9993, 10);
+    SPECTRAL("SPECTRAL", new SpectralTrap(), "Espectral", 9994, 5),
+    EXPLOSIVE("EXPLOSIVE", new ExplosiveTrap(), "Explosiva", 9993, 1);
 
     public final String value;
     public final Trap trap;

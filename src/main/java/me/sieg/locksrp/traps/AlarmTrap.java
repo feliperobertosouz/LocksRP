@@ -4,6 +4,7 @@ import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.utils.InventoryChecker;
 import me.sieg.locksrp.utils.MessageSender;
 import me.sieg.locksrp.utils.SaveDoor;
+import me.sieg.locksrp.utils.SoundPlayer;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -37,6 +38,8 @@ public class AlarmTrap extends SuperTrap{
         loc.getWorld().playSound(loc, Sound.BLOCK_BELL_USE, 10.0f, 2.0f);
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de alarme");
         super.decrementUses(player,loc);
+        SoundPlayer soundPlayer = new SoundPlayer();
+        soundPlayer.playSoundRepeatedly(loc, Sound.BLOCK_BELL_USE, 7,30, 11.0f, 2.0f);
     }
 
 

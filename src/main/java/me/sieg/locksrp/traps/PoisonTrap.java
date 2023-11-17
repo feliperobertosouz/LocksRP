@@ -22,7 +22,7 @@ public class PoisonTrap extends SuperTrap{
     public void lastActivate(Player player, Location loc) {
         MessageSender messageSender = new MessageSender();
         player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*40, 2));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20*10 , 2));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20*10 , 1));
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de veneno");
         super.decrementUses(player,loc);
     }
