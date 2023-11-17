@@ -26,6 +26,7 @@ public class SpikeTrap extends SuperTrap{
         MessageSender messageSender = new MessageSender();
         player.damage(10.0);
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de espinhos");
+        super.decrementUses(player,loc);
     }
 
 

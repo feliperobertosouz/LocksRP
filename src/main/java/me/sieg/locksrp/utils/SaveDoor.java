@@ -268,6 +268,8 @@ public class SaveDoor {
 
             // Remove o item "trap" do registro da porta
             doorSection.set("trap", null);
+            doorsConfig.set(key + ".uses", null);
+            doorsConfig.set(key + ".maxUses", null);
 
             // Salva as alterações no arquivo
             saveDoorsConfig();
@@ -333,6 +335,10 @@ public class SaveDoor {
             return doorsConfig.getInt(key + ".uses");
         }
 
+        if(!doorsConfig.contains(key + ".maxUses")){
+            System.out.println("Não tinha maxUses");
+            setMaxUses(location, 10);
+        }
         System.out.println("Não tinha uses");
         setUses(location, 10);
         return 5;
@@ -361,4 +367,23 @@ public class SaveDoor {
             setUses(location, 10);
         }
     }
+
+    public void setMaxUses(Location location, int maxUses) {
+        String key = locationToString(location);
+
+        doorsConfig.set(key + ".maxUses", maxUses);
+
+        saveDoorsConfig();
+    }
+
+    public int getMaxUses(Location location) {
+        String key = locationToString(location);
+
+        if (doorsConfig.contains(key + ".maxUses")) {
+            return doorsConfig.getInt(key + ".maxUses");
+        }
+
+        return -1; // Retornar -1 se o valor não estiver definido
+    }
+
 }

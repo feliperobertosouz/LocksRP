@@ -31,7 +31,9 @@ public class SuperTrap implements Trap{
         String trapType = ItemManager.getTrapType(trapItem.getItemMeta());
         saveDoor.addTrapToDoor(loc, trapType);
         int uses = ItemManager.getUses(trapItem.getItemMeta());
+        int maxUses = ItemManager.getMaxUses(trapItem.getItemMeta());
         saveDoor.setUses(loc,uses);
+        saveDoor.setMaxUses(loc,maxUses);
         InventoryChecker.useItem(player, trapItem);
     }
 
@@ -54,9 +56,11 @@ public class SuperTrap implements Trap{
     public void removeTrap(Player player, Location loc) {
         SaveDoor saveDoor = new SaveDoor();
         int lastUses = saveDoor.getUses(loc);
+        int maxUses = saveDoor.getMaxUses(loc);
         String trapTypeString = saveDoor.getTrap(loc);
         TrapType type = TrapType.valueOf(trapTypeString);
-        ItemStack drop = TrapFactory.createTrap(type,lastUses);
+        ItemStack drop = TrapFactory.createTrap(type,lastUses, maxUses);
+        saveDoor.removeTrapFromDoor(loc);
         saveDoor.dropItemOnGround(loc, drop);
     }
 

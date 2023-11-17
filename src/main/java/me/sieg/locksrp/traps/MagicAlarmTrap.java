@@ -98,6 +98,7 @@ public class MagicAlarmTrap extends SuperTrap{
         }else{
             player.sendMessage("Eu não tenho dono para avisar :(");
         }
+        super.decrementUses(player,loc);
     }
 
     public static void sendMessageToOnlinePlayer(String playerName, String message) {

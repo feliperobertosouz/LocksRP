@@ -25,7 +25,6 @@ public class ReinforcementTrap extends SuperTrap{
         MessageSender sender = new MessageSender();
         InventoryChecker.removeLockPick(player);
         sender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo da porta e gasta mais lockpicks para tirar as mãos");
-        InventoryChecker.removeLockPick(player,10);
-        super.decrementUses(player,loc);
+        InventoryChecker.removeLockPick(player,5);
     }
 }

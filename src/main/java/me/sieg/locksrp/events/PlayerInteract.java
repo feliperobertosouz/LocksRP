@@ -65,20 +65,18 @@ public class PlayerInteract implements Listener {
         ItemStack mainHandItem = player.getInventory().getItemInMainHand();
         ItemStack offHandItem = player.getInventory().getItemInOffHand();
 
-        // Substitua "Material.CHAVE" pelo material real da chave que você está usando
+
         if (ItemManager.isKey(mainHandItem.getItemMeta()) && offHandItem.getType() != Material.AIR) {
             event.setCancelled(true);
-            // Substitua Material.ITEM_1, Material.ITEM_2 pelos materiais reais da sua lista
             MaterialKey matchingMaterialKey = getMatchingMaterialKey(offHandItem.getType());
             if (matchingMaterialKey != null) {
-                // Remove 1 do item na mão esquerda
                 offHandItem.setAmount(offHandItem.getAmount() - 1);
 
-                // Define o novo CustomModelData da chave na mão principal
+
                 int customModelData = matchingMaterialKey.getCustomModelData();
                 mainHandItem = setCustomModelData(mainHandItem, customModelData);
                 messageSender.sendPlayerMessage(player, "&6Você da uma bela embelezada na sua chave", Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-                // Atualiza o inventário do jogador
+
                 player.getInventory().setItemInMainHand(mainHandItem);
             }
         }

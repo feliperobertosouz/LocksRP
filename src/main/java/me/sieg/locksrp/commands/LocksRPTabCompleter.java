@@ -27,6 +27,7 @@ public class LocksRPTabCompleter implements TabCompleter {
             results.add("getCustomKey");
             results.add("getUniversalKey");
             results.add("getTrap");
+            results.add("getCustomTrap");
         }else if(args.length == 2){
             if(args[0].equalsIgnoreCase("getLock")){
                 results.add("1");
@@ -36,6 +37,14 @@ public class LocksRPTabCompleter implements TabCompleter {
                 results.add("5");
                 results.add("6");
             }else if(args[0].equalsIgnoreCase("getTrap")){
+                results.add("ALARM");
+                results.add("MAGIC_ALARM");
+                results.add("SPIKE");
+                results.add("POISON");
+                results.add("REINFORCEMENT");
+                results.add("SPECTRAL");
+                results.add("EXPLOSIVE");
+            }else if(args[0].equalsIgnoreCase("getCustomTrap")){
                 results.add("ALARM");
                 results.add("MAGIC_ALARM");
                 results.add("SPIKE");
