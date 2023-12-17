@@ -15,6 +15,7 @@ public class AlarmTrap extends SuperTrap{
 
     @Override
     public void install(PlayerInteractEvent event,Player player, Location loc, ItemStack trapItem) {
+
         MessageSender messageSender = new MessageSender();
         super.install(event, player, loc, trapItem);
         messageSender.sendPlayerMessage(player, "&c Você acaba instalando uma armadilha de alarme na tranca");
@@ -39,7 +40,7 @@ public class AlarmTrap extends SuperTrap{
         messageSender.sendPlayerMessage(player,"&c Você acaba ativando o mecanismo de alarme");
         super.decrementUses(player,loc);
         SoundPlayer soundPlayer = new SoundPlayer();
-        soundPlayer.playSoundRepeatedly(loc, Sound.BLOCK_BELL_USE, 7,30, 11.0f, 2.0f);
+        soundPlayer.playSoundRepeatedly(loc, Sound.BLOCK_BELL_USE, 10,30, 13.0f, 1.5f);
     }
 
 

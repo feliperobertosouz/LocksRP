@@ -2,8 +2,6 @@ package me.sieg.locksrp.events;
 import me.sieg.locksrp.interactions.ContainerInteraction;
 import me.sieg.locksrp.interactions.DoorInteraction;
 import me.sieg.locksrp.item.ItemManager;
-import me.sieg.locksrp.item.KeyFactory;
-import me.sieg.locksrp.item.LockFactory;
 import me.sieg.locksrp.item.MaterialKey;
 import me.sieg.locksrp.traps.Trap;
 import me.sieg.locksrp.traps.TrapType;
@@ -22,16 +20,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PlayerInteract implements Listener {
 
     private ChestKeeper chestlist;
 
     public PlayerInteract(ChestKeeper chestlist) {
         this.chestlist = chestlist;
-
     }
 
     ItemManager itemManager = new ItemManager();
@@ -40,7 +34,6 @@ public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-
         Block clickedBlock = event.getClickedBlock();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null) {
             if (clickedBlock.getType() == Material.SMITHING_TABLE) {
@@ -66,7 +59,7 @@ public class PlayerInteract implements Listener {
         ItemStack offHandItem = player.getInventory().getItemInOffHand();
 
 
-        if (ItemManager.isKey(mainHandItem.getItemMeta()) && offHandItem.getType() != Material.AIR) {
+        if (mainHandItem.hasItemMeta() && ItemManager.isKey(mainHandItem.getItemMeta()) && offHandItem.getType() != Material.AIR) {
             event.setCancelled(true);
             MaterialKey matchingMaterialKey = getMatchingMaterialKey(offHandItem.getType());
             if (matchingMaterialKey != null) {

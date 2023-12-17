@@ -17,8 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class MagicAlarmTrap extends SuperTrap{
-
-
     @Override
     public void install(PlayerInteractEvent event, Player player, Location loc, ItemStack trapItem) {
         if(ItemManager.getOwner(trapItem.getItemMeta()) != null){
