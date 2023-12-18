@@ -3,6 +3,7 @@ package me.sieg.locksrp;
 import me.sieg.locksrp.commands.LocksRPCommands;
 import me.sieg.locksrp.commands.LocksRPTabCompleter;
 import me.sieg.locksrp.events.*;
+import me.sieg.locksrp.keyChain.KeyChainMenuListener;
 import me.sieg.locksrp.utils.ChestKeeper;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -30,6 +31,7 @@ public final class Main extends JavaPlugin {
        getServer().getPluginManager().registerEvents(new LockPickMinigame(), this);
        getServer().getPluginManager().registerEvents(new BlockBreak(),this);
        getServer().getPluginManager().registerEvents(new PlayerInteractEntity(), this);
+       getServer().getPluginManager().registerEvents(new KeyChainMenuListener(), this);
        getCommand("LocksRP").setExecutor(new LocksRPCommands());
        getCommand("LocksRP").setTabCompleter(new LocksRPTabCompleter());
 

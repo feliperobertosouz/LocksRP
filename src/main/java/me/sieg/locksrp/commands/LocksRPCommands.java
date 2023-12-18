@@ -129,6 +129,10 @@ public class LocksRPCommands implements CommandExecutor {
                     int maxUses = Integer.parseInt(args[2]);
                     ItemStack trapItem = TrapFactory.createTrap(trap, maxUses, maxUses);
                     player.getInventory().addItem(trapItem);
+                }else if(args[0].equalsIgnoreCase("getKeyChain")){
+                    sender.sendMessage(ChatColor.DARK_GREEN + "[LOCKSRP]:" + ChatColor.WHITE + "você recebeu um chaveiro teste");
+                    ItemStack keyChain = items.getKeyChain();
+                    player.getInventory().addItem(keyChain);
                 }
                 else{
                     commandAjuda(args, player);
