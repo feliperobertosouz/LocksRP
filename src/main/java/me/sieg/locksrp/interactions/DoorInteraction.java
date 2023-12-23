@@ -112,7 +112,7 @@ public class DoorInteraction {
         if (InventoryChecker.hasLockPick(player) && !InventoryChecker.hasCorrectKey(player, lockCode)) {
             handleLockPick(player, loc);
             event.setCancelled(true);
-        } else if (InventoryChecker.hasCorrectKey(player, lockCode) || InventoryChecker.hasUniversalKey(player)) {
+        } else if (InventoryChecker.hasCorrectKey(player, lockCode) || InventoryChecker.hasUniversalKey(player) || InventoryChecker.hasCorrectCodeInKeyChain(player, lockCode)) {
             messageSender.sendPlayerMessage(player, "&fVocê tem a chave.", Sound.ENTITY_VILLAGER_TRADE, 1.0f, 2.0f);
         }else{
             messageSender.sendPlayerMessage(player, "&cA porta está trancada, você não tem a chave dela", Sound.ENTITY_VILLAGER_NO, 1.0f, 2.0f);

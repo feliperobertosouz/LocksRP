@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ItemManager {
     }
 
     public static String getKeyCode(ItemMeta meta){
-        if(ItemManager.isLock(meta)){
+        if(ItemManager.isLock(meta) || ItemManager.isKey(meta)){
             String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
             return lockCode;
         }
@@ -48,23 +49,40 @@ public class ItemManager {
         return null;
     }
 
-    public static  Boolean isLock(ItemMeta meta){
-        if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
-                PersistentDataType.STRING) ||
-                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
-                        PersistentDataType.BYTE)){
-            return true;
+    public static Boolean isLock(ItemMeta meta) {
+        // Verifica se o meta é nulo antes de acessar a PersistentDataContainer
+        if (meta != null && meta.getPersistentDataContainer() != null) {
+            if (meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
+                    PersistentDataType.STRING) ||
+                    meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isLock"),
+                            PersistentDataType.BYTE)) {
+                return true;
+            }
         }
         return false;
     }
 
-    public static Boolean isKey(ItemMeta meta){
-        if(
-                meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
-                        PersistentDataType.STRING) ||
-                        meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
-                                PersistentDataType.BYTE)){
-            return true;
+    public static Boolean isKey(ItemMeta meta) {
+        // Verifica se o meta é nulo antes de acessar a PersistentDataContainer
+        if (meta != null && meta.getPersistentDataContainer() != null) {
+            if (meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
+                    PersistentDataType.STRING) ||
+                    meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKey"),
+                            PersistentDataType.BYTE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Boolean isKeyChain(ItemMeta meta) {
+        if(meta != null && meta.getPersistentDataContainer() != null){
+            if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKeyChain"),
+                    PersistentDataType.STRING) ||
+                    meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKeyChain"),
+                            PersistentDataType.BYTE)){
+                return true;
+            }
         }
         return false;
     }
@@ -155,6 +173,17 @@ public class ItemManager {
         ItemStack chave = KeyFactory.generateKey(item, code);
         return chave;
 
+    }
+
+
+    public ItemStack getKeyChain(){
+        List<String> keyCodes = new ArrayList<>();
+        // Suponha que você tenha um customModelData desejado
+        List<String> keyNames = new ArrayList<>();
+        List<Integer> keyModels = new ArrayList<>();
+        // Crie o KeyChain a partir das informações
+        ItemStack keychain = KeyChainFactory.createKeychainFromInfo(keyCodes, keyNames, keyModels,9,9999);
+        return keychain;
     }
 
 
@@ -289,5 +318,6 @@ public class ItemManager {
 
         return itemStack;
     }
+
 
 }

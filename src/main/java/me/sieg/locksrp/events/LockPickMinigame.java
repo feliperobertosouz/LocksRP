@@ -1,5 +1,4 @@
 package me.sieg.locksrp.events;
-
 import me.sieg.locksrp.Main;
 import me.sieg.locksrp.item.ItemManager;
 import me.sieg.locksrp.traps.Trap;
@@ -18,12 +17,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 
 public class LockPickMinigame implements Listener {
 

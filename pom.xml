@@ -6,7 +6,7 @@
 
     <groupId>me.sieg</groupId>
     <artifactId>LocksRP</artifactId>
-    <version>1.5.8</version>
+    <version>1.6.9</version>
     <packaging>jar</packaging>
 
     <name>LocksRP</name>

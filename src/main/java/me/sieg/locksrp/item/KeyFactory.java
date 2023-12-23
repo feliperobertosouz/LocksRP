@@ -37,6 +37,38 @@ public class KeyFactory {
         return key;
     }
 
+    public static ItemStack createKey(int amount, int customModelData, String displayName) {
+        ItemStack key = new ItemStack(Material.NAME_TAG, amount);
+        ItemMeta meta = key.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.WHITE + "Key");
+
+            // Adicione outras configurações da chave conforme necessário
+            meta = NameSpacedKeys.setNameSpacedKey(meta, "isKey", "true");
+            meta.setCustomModelData(customModelData);
+            meta.setDisplayName(displayName);
+
+            key.setItemMeta(meta);
+        }
+
+        return key;
+    }
+
+    public static ItemStack generateKey(String code, int model, String displayName) {
+        ItemStack key = createKey(1);
+        ItemMeta meta = key.getItemMeta();
+
+        NameSpacedKeys.setNameSpacedKey(meta, "keyCode", code);
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
+        meta.setDisplayName(displayName);
+        meta.setCustomModelData(model);
+        key.setItemMeta(meta);
+
+        return key;
+    }
+
+
     public static ItemStack generateKey(String code) {
         ItemStack key = createKey(1);
         ItemMeta meta = key.getItemMeta();
@@ -56,6 +88,18 @@ public class KeyFactory {
         key.setItemMeta(meta);
         return key;
     }
+
+    public static ItemStack generateKey(ItemStack item, String code, String displayName) {
+        ItemStack key = item.clone(); // Clone para evitar modificar a instância original
+        ItemMeta meta = key.getItemMeta();
+
+        NameSpacedKeys.setNameSpacedKey(meta, "keyCode", code);
+        meta.setLore(Collections.singletonList(ChatColor.WHITE + "Key: " + ChatColor.DARK_PURPLE + code));
+        meta.setDisplayName(displayName);
+        key.setItemMeta(meta);
+        return key;
+    }
+
 
     public static ItemStack createUniversalKey(){
         ItemStack chave = new ItemStack(Material.NAME_TAG, 1);

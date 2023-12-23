@@ -59,4 +59,8 @@ public enum TrapType {
     public static Trap getTrapByType(TrapType trapType) {
         return trapType.getTrap();
     }
+
+    public static TrapType getTrapTypeByValue(String value) {
+        return trapTypeMap.get(value.toUpperCase());
+    }
 }
