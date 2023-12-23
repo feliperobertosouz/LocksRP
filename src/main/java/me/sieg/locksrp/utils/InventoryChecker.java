@@ -39,13 +39,11 @@ public class InventoryChecker {
     }
 
     public static boolean hasCorrectCodeInKeyChain(Player player, String desiredCode) {
-        System.out.println("Rodando hasCorrectCodeInKeyChain");
-        System.out.println("desiredCode: " + desiredCode);
+
 
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && item.hasItemMeta() && isKeyChain(item.getItemMeta())) {
                 List<String> keyCodes = KeyChainFactory.getKeyCodesFromKeyChain(item);
-                System.out.println("keyCodes: " + keyCodes);
 
                 if (keyCodes.contains(desiredCode)) {
                     return true;

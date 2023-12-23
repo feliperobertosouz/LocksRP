@@ -91,7 +91,7 @@ public class TrapFactory {
         meta.setCustomModelData(trapType.customModelData);
         trap.setItemMeta(meta);
 
-        System.out.println("USOS UPDATE: " +ItemManager.getUses(trap.getItemMeta()));
+
         return trap;
     }
 

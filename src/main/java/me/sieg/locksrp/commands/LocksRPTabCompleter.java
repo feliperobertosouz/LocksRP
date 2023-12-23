@@ -54,7 +54,7 @@ public class LocksRPTabCompleter implements TabCompleter {
     private List<String> getAllCommands() {
         // Return a list of all possible commands
         return Arrays.asList("getkey", "getlock", "getlockpick", "getdata", "getlockremover", "getkeyoflock",
-                "getcustomkey", "getuniversalkey", "gettrap", "getcustomtrap");
+                "getcustomkey", "getuniversalkey", "gettrap", "getcustomtrap", "keychain");
     }
 
     private List<String> getAllLocks() {

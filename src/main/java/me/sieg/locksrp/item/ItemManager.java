@@ -30,7 +30,7 @@ public class ItemManager {
     }
 
     public static String getKeyCode(ItemMeta meta){
-        if(ItemManager.isLock(meta)){
+        if(ItemManager.isLock(meta) || ItemManager.isKey(meta)){
             String lockCode = NameSpacedKeys.getNameSpacedKey(meta, "keyCode");
             return lockCode;
         }
@@ -76,9 +76,15 @@ public class ItemManager {
     }
 
     public static Boolean isKeyChain(ItemMeta meta) {
-        NamespacedKey key = new NamespacedKey(Main.getPlugin(), "isKeyChain");
-        return meta.getPersistentDataContainer().has(key, PersistentDataType.STRING) ||
-                meta.getPersistentDataContainer().has(key, PersistentDataType.BYTE);
+        if(meta != null && meta.getPersistentDataContainer() != null){
+            if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKeyChain"),
+                    PersistentDataType.STRING) ||
+                    meta.getPersistentDataContainer().has(new NamespacedKey(Main.getPlugin(), "isKeyChain"),
+                            PersistentDataType.BYTE)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static  Boolean isUniversalKey(ItemMeta meta){
@@ -172,23 +178,11 @@ public class ItemManager {
 
     public ItemStack getKeyChain(){
         List<String> keyCodes = new ArrayList<>();
-
-        keyCodes.add("ChaveA");
-        keyCodes.add("ChaveB");
-        keyCodes.add("ChaveC");
         // Suponha que você tenha um customModelData desejado
         List<String> keyNames = new ArrayList<>();
-        keyNames.add("ChaveA");
-        keyNames.add("ChaveB");
-        keyNames.add("ChaveC");
-
         List<Integer> keyModels = new ArrayList<>();
-        keyModels.add(9996);
-        keyModels.add(9992);
-        keyModels.add(9999);
-
         // Crie o KeyChain a partir das informações
-        ItemStack keychain = KeyChainFactory.createKeychainFromInfo(keyCodes, keyNames, keyModels,9);
+        ItemStack keychain = KeyChainFactory.createKeychainFromInfo(keyCodes, keyNames, keyModels,9,9999);
         return keychain;
     }
 

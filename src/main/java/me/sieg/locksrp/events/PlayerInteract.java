@@ -41,9 +41,13 @@ public class PlayerInteract implements Listener {
         Block clickedBlock = event.getClickedBlock();
         ItemStack mainItem = event.getPlayer().getInventory().getItemInMainHand();
 
-        if(event.getAction() == Action.RIGHT_CLICK_AIR && ItemManager.isKeyChain(mainItem.getItemMeta())){
-            handleKeyChainInteraction(event);
-            event.setCancelled(true);
+        if(ItemManager.isKeyChain(mainItem.getItemMeta())){
+            if(mainItem.getAmount() == 1){
+                handleKeyChainInteraction(event);
+                event.setCancelled(true);
+            }else{
+                messageSender.sendPlayerMessage(event.getPlayer(), "&4Você não pode usar 2 chaveiros no mesmo slot!");
+            }
         }
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null) {
                 Player player = event.getPlayer();
@@ -66,7 +70,8 @@ public class PlayerInteract implements Listener {
 
     private void handleKeyChainInteraction(PlayerInteractEvent event){
         Player player = event.getPlayer();
-        messageSender.sendPlayerMessage(player,"Você clicou com o chaveiro");
+        messageSender.sendPlayerMessage(player,"Abrindo chaveiro");
+        player.playSound(player, Sound.BLOCK_BARREL_OPEN , 1.0f, 1.5f);
         ItemStack mainHandItem = player.getInventory().getItemInMainHand();
         List<ItemStack> keys = KeyChainFactory.generateKeysFromKeyChain(mainHandItem);
         KeyChainMenu keyChainMenu = new KeyChainMenu();

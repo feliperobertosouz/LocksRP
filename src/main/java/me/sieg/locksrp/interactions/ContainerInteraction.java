@@ -44,7 +44,7 @@ public class ContainerInteraction {
                     if (ItemManager.hasKeyCode(firstItem.getItemMeta())) {
                         Integer level = LockFactory.getLockLevel(firstItem.getItemMeta());
                         String lockCode = ItemManager.getKeyCode(firstItem.getItemMeta());
-                        if (InventoryChecker.hasCorrectKey(player, lockCode)) {
+                        if (InventoryChecker.hasCorrectKey(player, lockCode) || InventoryChecker.hasCorrectCodeInKeyChain(player, lockCode)) {
                             messageSender.sendPlayerMessage(player, "&8 Você abre o baú");
                         } else {
                             event.setCancelled(true);

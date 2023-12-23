@@ -2,6 +2,7 @@ package me.sieg.locksrp.item;
 
 import me.sieg.locksrp.Main;
 import me.sieg.locksrp.utils.NameSpacedKeys;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -19,8 +20,8 @@ import static me.sieg.locksrp.item.KeyFactory.generateKey;
 public class KeyChainFactory {
 
 
-    public static ItemStack createKeychainFromInfo(List<String> keyCodes, List<String> keyNames, List<Integer> customModelDatas, int size) {
-        ItemStack keychain = new ItemStack(Material.NAME_TAG);
+    public static ItemStack createKeychainFromInfo(List<String> keyCodes, List<String> keyNames, List<Integer> customModelDatas, int size, int customModelData) {
+        ItemStack keychain = new ItemStack(Material.HONEYCOMB);
         ItemMeta meta = keychain.getItemMeta();
 
         // Configura o persistentDataContainer para armazenar as informações das chaves
@@ -47,10 +48,14 @@ public class KeyChainFactory {
 
         // Adiciona a lore com os códigos
         List<String> lore = new ArrayList<>();
-        lore.add("KeyCodes:");
-        lore.addAll(keyCodes);
+        lore.add(ChatColor.WHITE + ""+ ChatColor.BOLD + "Chaves:");
+        for (String keyCode : keyCodes) {
+            lore.add(ChatColor.WHITE + "- " + keyCode);
+        }
         meta.setLore(lore);
 
+        meta.setDisplayName(ChatColor.WHITE + "Chaveiro");
+        meta.setCustomModelData(customModelData);
         keychain.setItemMeta(meta);
 
         return keychain;
@@ -114,13 +119,21 @@ public class KeyChainFactory {
 
 
     public static List<ItemStack> generateKeysFromKeyChain(ItemStack keyChain) {
-        System.out.println("Usando generateKeysFromKeyChain");
         List<ItemStack> keys = new ArrayList<>();
 
         if (ItemManager.isKeyChain(keyChain.getItemMeta())) {
             List<String> keyCodes = getKeyCodesFromKeyChain(keyChain);
+            if(keyCodes.get(0).equals("")){
+                return null;
+            }
+
             List<String> keyNames = getKeyNamesFromKeyChain(keyChain);
             List<String> keyModels = getKeyModelsFromKeyChain(keyChain);
+
+            // Verifica se pelo menos uma lista está vazia
+            if (keyCodes.isEmpty() || keyNames.isEmpty() || keyModels.isEmpty()) {
+                return null;
+            }
 
             // Certifique-se de que todas as listas têm o mesmo tamanho
             int size = Math.min(keyCodes.size(), Math.min(keyNames.size(), keyModels.size()));
@@ -129,12 +142,17 @@ public class KeyChainFactory {
                 String keyCode = keyCodes.get(i);
                 String keyName = keyNames.get(i);
 
-                // Converta a String para int
-                int keyModel = Integer.parseInt(keyModels.get(i));
+                // Converta a String para int, verificando se não está vazia
+                int keyModel;
+                if (!keyModels.get(i).isEmpty()) {
+                    keyModel = Integer.parseInt(keyModels.get(i));
+                } else {
+                    // Trate o caso em que a string está vazia, atribuindo um valor padrão
+                    keyModel = 0; // Ou qualquer outro valor padrão desejado
+                }
 
                 // Use o método generateKey para criar um ItemStack para cada chave
                 ItemStack keyItem = KeyFactory.generateKey(keyCode, keyModel, keyName);
-                System.out.println(keyItem.getItemMeta().toString());
                 keys.add(keyItem);
             }
         }
@@ -156,6 +174,38 @@ public class KeyChainFactory {
         }
 
         return 0; // Valor padrão ou indicação de erro, dependendo da sua lógica
+    }
+
+    public static ItemStack updateKeyChainMetadata(ItemStack keyChain, List<ItemStack> keys) {
+        List<String> keyCodes = new ArrayList<>();
+        List<String> keyNames = new ArrayList<>();
+        List<String> keyModels = new ArrayList<>();
+
+        for (ItemStack key : keys) {
+            ItemMeta keyMeta = key.getItemMeta();
+            keyCodes.add(ItemManager.getKeyCode(keyMeta));
+            keyNames.add(keyMeta.getDisplayName());
+            keyModels.add(Integer.toString(keyMeta.getCustomModelData()));
+        }
+
+        ItemMeta keyChainMeta = keyChain.getItemMeta();
+        NamespacedKey codesKey = new NamespacedKey(Main.getPlugin(), "keyCodes");
+        NamespacedKey namesKey = new NamespacedKey(Main.getPlugin(), "keyNames");
+        NamespacedKey modelsKey = new NamespacedKey(Main.getPlugin(), "keyModels");
+
+        keyChainMeta.getPersistentDataContainer().set(codesKey, PersistentDataType.STRING, String.join(",", keyCodes));
+        keyChainMeta.getPersistentDataContainer().set(namesKey, PersistentDataType.STRING, String.join(",", keyNames));
+        keyChainMeta.getPersistentDataContainer().set(modelsKey, PersistentDataType.STRING, String.join(",", keyModels));
+
+        // Atualiza a lore
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + ""+ ChatColor.BOLD + "Chaves:");
+        for (String keyCode : keyCodes) {
+            lore.add(ChatColor.WHITE + "- " + keyCode);
+        }
+        keyChainMeta.setLore(lore);
+        keyChain.setItemMeta(keyChainMeta);
+        return keyChain;
     }
 
 
